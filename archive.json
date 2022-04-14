@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-04-12T01:40:50.986643+00:00",
+  "timestamp": "2022-04-14T01:52:08.219302+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -1837,7 +1837,7 @@
       "labels": [],
       "body": "Should we define a header that can carry problem details? \r\n\r\nE.g., for the first example in the spec:\r\n\r\n~~~ json\r\n{\r\n \"type\": \"https://example.com/probs/out-of-credit\",\r\n \"title\": \"You do not have enough credit.\",\r\n \"detail\": \"Your current balance is 30, but that costs 50.\",\r\n \"instance\": \"/account/12345/msgs/abc\",\r\n \"balance\": 30,\r\n \"accounts\": [\"/account/12345\",\r\n              \"/account/67890\"]\r\n}\r\n~~~\r\n\r\na workable mapping might be to use [Structured Fields](https://www.rfc-editor.org/rfc/rfc8941.html) to represent the top-level members of the object, like this:\r\n\r\n~~~\r\nProblem-Details: type=\"https://example.com/probs/out-of-credit\", \r\n          title=\"You do not have enough credit.\", \r\n          detail=\"Your current balance is 30, but that costs 50.\", \r\n          instance=\"/account/12345/msgs/abc\", \r\n          balance=30\r\n~~~\r\n\r\nThat drops any extensions that are not simple values, but I think that's a reasonable tradeoff...\r\n\r\nWould this be useful?",
       "createdAt": "2022-02-07T01:04:12Z",
-      "updatedAt": "2022-04-11T18:43:58Z",
+      "updatedAt": "2022-04-12T06:30:23Z",
       "closedAt": null,
       "comments": [
         {
@@ -1986,6 +1986,13 @@
           "body": "I'm not sure if there's a specific use defined, but I would use it similar to 4xx errors. If there's no specific 4xx code for the error, this enables you to use a Problem header field with a 400 Client Error to make your specific class of error more machine-readable. Whereas normally, 400 requires human intervention because it could mean any error.",
           "createdAt": "2022-04-11T18:36:33Z",
           "updatedAt": "2022-04-11T18:43:58Z"
+        },
+        {
+          "author": "dret",
+          "authorAssociation": "COLLABORATOR",
+          "body": "On 2022-04-11 20:36, Austin Wright wrote:\n> I'm not sure if there's a specific use defined, but I think you can see \n> it similar to 4xx errors. If there's no specific 4xx code for the error, \n> this enables you to use a Problem header field with a 400 Client Error \n> to make your specific class of error more machine-readable. Whereas \n> normally, 400 requires human intervention because it could mean any error.\n\ni agree in principle, but i'd argue that you could make the specific \nerror equally machine-readable by using a body with a problem report.\n\nwhere a header may be useful is when you want your API to generate \nhuman-readable error responses (in HTML) but still want a machine \nreadable version for machine clients. there would be other patterns to \naccomplish the same goal, but i think that's a line of reasoning you \ncould follow.\n",
+          "createdAt": "2022-04-12T06:30:23Z",
+          "updatedAt": "2022-04-12T06:30:23Z"
         }
       ]
     },
