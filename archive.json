@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-04-14T01:52:08.219302+00:00",
+  "timestamp": "2022-04-17T01:44:58.393514+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -1837,7 +1837,7 @@
       "labels": [],
       "body": "Should we define a header that can carry problem details? \r\n\r\nE.g., for the first example in the spec:\r\n\r\n~~~ json\r\n{\r\n \"type\": \"https://example.com/probs/out-of-credit\",\r\n \"title\": \"You do not have enough credit.\",\r\n \"detail\": \"Your current balance is 30, but that costs 50.\",\r\n \"instance\": \"/account/12345/msgs/abc\",\r\n \"balance\": 30,\r\n \"accounts\": [\"/account/12345\",\r\n              \"/account/67890\"]\r\n}\r\n~~~\r\n\r\na workable mapping might be to use [Structured Fields](https://www.rfc-editor.org/rfc/rfc8941.html) to represent the top-level members of the object, like this:\r\n\r\n~~~\r\nProblem-Details: type=\"https://example.com/probs/out-of-credit\", \r\n          title=\"You do not have enough credit.\", \r\n          detail=\"Your current balance is 30, but that costs 50.\", \r\n          instance=\"/account/12345/msgs/abc\", \r\n          balance=30\r\n~~~\r\n\r\nThat drops any extensions that are not simple values, but I think that's a reasonable tradeoff...\r\n\r\nWould this be useful?",
       "createdAt": "2022-02-07T01:04:12Z",
-      "updatedAt": "2022-04-12T06:30:23Z",
+      "updatedAt": "2022-04-14T23:42:38Z",
       "closedAt": null,
       "comments": [
         {
@@ -1993,6 +1993,20 @@
           "body": "On 2022-04-11 20:36, Austin Wright wrote:\n> I'm not sure if there's a specific use defined, but I think you can see \n> it similar to 4xx errors. If there's no specific 4xx code for the error, \n> this enables you to use a Problem header field with a 400 Client Error \n> to make your specific class of error more machine-readable. Whereas \n> normally, 400 requires human intervention because it could mean any error.\n\ni agree in principle, but i'd argue that you could make the specific \nerror equally machine-readable by using a body with a problem report.\n\nwhere a header may be useful is when you want your API to generate \nhuman-readable error responses (in HTML) but still want a machine \nreadable version for machine clients. there would be other patterns to \naccomplish the same goal, but i think that's a line of reasoning you \ncould follow.\n",
           "createdAt": "2022-04-12T06:30:23Z",
           "updatedAt": "2022-04-12T06:30:23Z"
+        },
+        {
+          "author": "olijaun",
+          "authorAssociation": "NONE",
+          "body": "I don't really see why one would need both things at the same time (but maybe my view is too limited).\r\n\r\nEither you request a HTML page and then you also expect a HTML response in case of an error. OR you add \"application/problems+json\" in addition to some \"application/myapp+json\" type to the accept header and you get the machine-readable response-\r\n\r\nAssuming your request a HTML file and it is returned with the header in question: How would you access these header fields? If you load a page with a browser you can't afterwards access the HTTP-Headers of this page in Javascript (I had too look that up here: https://stackoverflow.com/questions/220231/accessing-the-web-pages-http-headers-in-javascript) .\r\n\r\nOr you load the page with javascript but then why would you request a HTML? It would be possible of course but why?\r\n\r\nOf course: If browsers started to support this header field natively then maybe...",
+          "createdAt": "2022-04-14T13:01:35Z",
+          "updatedAt": "2022-04-14T13:01:35Z"
+        },
+        {
+          "author": "awwright",
+          "authorAssociation": "NONE",
+          "body": "@olijaun I would expect a `Problem` header along with an HTML document for the same reason I would expect a server to respond with a 4xx code (instead of a generic 400 one). It provides more information about the nature of the error to the user agent.\r\n\r\nThat is, the Problem header is probably intended for use by the user agent itself\u2014not the webpage. (Although I agree, a webpage should be able to access the response headers that it was delivered with, except possibly Set-Cookie.)",
+          "createdAt": "2022-04-14T23:42:37Z",
+          "updatedAt": "2022-04-14T23:42:37Z"
         }
       ]
     },
@@ -2054,6 +2068,22 @@
           "updatedAt": "2022-03-28T03:03:44Z"
         }
       ]
+    },
+    {
+      "number": 40,
+      "id": "I_kwDOE-NsGs5Hysyk",
+      "title": "Questions regarding extension",
+      "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/40",
+      "state": "OPEN",
+      "author": "olijaun",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Hi\r\n\r\nThe draft states:\r\n\r\n> Note that because extensions are effectively put into a namespace by the problem type, it is not possible to define new \"standard\" members without defining a new media type.\r\n\r\nI get the part regarding the media type.\r\n\r\nI'm not sure if I understand the part about the namespace correctly (I'm not a native speaker so this might be the problem):\r\n\r\nLet's say I have the following problem (Ex. 1):\r\n```\r\n{\r\n  \"type\": \"about:blank\",\r\n  \"title\": \"something's wrong\"\r\n}\r\n```\r\n\r\nNow I need an extension \"myextension\". Does this mean I necessarily have to define a specific type as shown in Ex 2?\r\n```\r\n{\r\n  \"type\": \"http://example.com/mytype\",\r\n  \"title\": \"something's wrong\",\r\n  \"myextension\": \"bla\"\r\n}\r\n```\r\n\r\nOr could I just add an extension to a problem detail of type \"about:blank\"? This would mean that extensions are defined always for all types (Ex 3)?\r\n\r\n```\r\n{\r\n  \"type\": \"about:blank\",\r\n  \"title\": \"something's wrong\",\r\n  \"myextension\": \"bla\"\r\n}\r\n```\r\n\r\nIf Ex 2 is the correct way then I don't understand the other discussion regarding forward compatibility.\r\n\r\nIf Ex 3 is correct then I don't understand the quote I've put in the beginning of my post.\r\n\r\nRegards\r\nOliver",
+      "createdAt": "2022-04-14T12:34:07Z",
+      "updatedAt": "2022-04-14T12:34:07Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
