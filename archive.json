@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-04-17T01:44:58.393514+00:00",
+  "timestamp": "2022-04-24T01:43:27.889246+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -2022,7 +2022,7 @@
       "labels": [],
       "body": "([In reply to #32](https://github.com/ietf-wg-httpapi/rfc7807bis/issues/32#issuecomment-1076569614), which I think is blocked by this issue.)\r\n\r\nI would call this specification \"forward compatible\" if we can add new features to it without interfering with existing compliant implementations. This is important so that standards can evolve to support new functionality, like proposed in #32.\r\n\r\nIt does not appear to me that there's any mechanism for forward compatibility, and this is noted:\r\n\r\n>    Note that because extensions are effectively put into a namespace by\r\n   the problem type, it is not possible to define new \"standard\" members\r\n   without defining a new media type.\r\n\r\nWhile the media type can be \"extended\" in some fashion, this is not the same as forward compatibility, because all extensions are by definition user extensions, so they cannot be standardized. I.e. there is no way to define new \"global\" members.\r\n\r\nI think this is important to fix. I see a few options:\r\n\r\n(1) Note how the concept of \"user\" extensions has some amount of ambiguity. In order to know what a non-standard member means, you have to know _who_ issued the Problem document. But there's no standard way to encode this! (It does say the type is \"effectively\" a namespace for extensions, but this doesn't seem like particularly authoritative language.) Applications that are tightly coupled with a specific API may not have trouble consuming user extensions, but other user-agents (e.g. spiders) may have a problem deciphering them. Because of this, I think we could more rigorously specify the behavior without significant breakage \"in the wild\". For example, specify that extension members must use a URI, and all other members have a standard definition. Or, choose some prefix that sorts high in ASCII, like `!` or `$`, to indicate standard \"global\" members.\r\n\r\n(2) If this still causes too much breakage, we could either reserve the member names that would cause breakage, or I would support minting a new media type.\r\n\r\nWe could also consider defining a JSON-LD vocabulary. There's likely a good way to encode the problem details that's easily detectable as a document describing the error, and having a standardized form and properties, while also being easily extensible for specific types of problems/errors.\r\n",
       "createdAt": "2022-03-23T20:12:37Z",
-      "updatedAt": "2022-03-28T03:03:44Z",
+      "updatedAt": "2022-04-18T22:28:56Z",
       "closedAt": null,
       "comments": [
         {
@@ -2066,6 +2066,13 @@
           "body": "Either one. `*-` is a bit weird IMO.\r\n\r\nEg\r\n\r\n`\"*json-pointer\": \"/foo/bar\"`\r\n\r\nvs\r\n\r\n`\"*-json-pointer\": \"/foo/bar\"`\r\n\r\n(keep in mind that if #39 doesn't eventuate the possibilities open up quite a bit)",
           "createdAt": "2022-03-28T03:03:44Z",
           "updatedAt": "2022-03-28T03:03:44Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "See PR #41 ",
+          "createdAt": "2022-04-18T22:28:55Z",
+          "updatedAt": "2022-04-18T22:28:55Z"
         }
       ]
     },
@@ -2074,16 +2081,94 @@
       "id": "I_kwDOE-NsGs5Hysyk",
       "title": "Questions regarding extension",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/40",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "olijaun",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Hi\r\n\r\nThe draft states:\r\n\r\n> Note that because extensions are effectively put into a namespace by the problem type, it is not possible to define new \"standard\" members without defining a new media type.\r\n\r\nI get the part regarding the media type.\r\n\r\nI'm not sure if I understand the part about the namespace correctly (I'm not a native speaker so this might be the problem):\r\n\r\nLet's say I have the following problem (Ex. 1):\r\n```\r\n{\r\n  \"type\": \"about:blank\",\r\n  \"title\": \"something's wrong\"\r\n}\r\n```\r\n\r\nNow I need an extension \"myextension\". Does this mean I necessarily have to define a specific type as shown in Ex 2?\r\n```\r\n{\r\n  \"type\": \"http://example.com/mytype\",\r\n  \"title\": \"something's wrong\",\r\n  \"myextension\": \"bla\"\r\n}\r\n```\r\n\r\nOr could I just add an extension to a problem detail of type \"about:blank\"? This would mean that extensions are defined always for all types (Ex 3)?\r\n\r\n```\r\n{\r\n  \"type\": \"about:blank\",\r\n  \"title\": \"something's wrong\",\r\n  \"myextension\": \"bla\"\r\n}\r\n```\r\n\r\nIf Ex 2 is the correct way then I don't understand the other discussion regarding forward compatibility.\r\n\r\nIf Ex 3 is correct then I don't understand the quote I've put in the beginning of my post.\r\n\r\nRegards\r\nOliver",
       "createdAt": "2022-04-14T12:34:07Z",
-      "updatedAt": "2022-04-14T12:34:07Z",
+      "updatedAt": "2022-04-19T08:24:28Z",
+      "closedAt": "2022-04-18T10:52:58Z",
+      "comments": [
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "To add an extension to a problem type, right now you need to control the type itself; you can't define an extension for another person's problem type without their permission.\r\n",
+          "createdAt": "2022-04-18T10:52:58Z",
+          "updatedAt": "2022-04-18T10:52:58Z"
+        },
+        {
+          "author": "dret",
+          "authorAssociation": "COLLABORATOR",
+          "body": "On 2022-04-18 12:53, Mark Nottingham wrote:\n> To add an extension to a problem type, right now you need to control the \n> type itself; you can't define an extension for another person's problem \n> type without their permission.\n\ni think that's slightly overselling the current state. types are one \nthing, extension members a different one. RFC 7807 vaguely hints at \n\"types defining members\", but there is no namespacing or scoping, so in \nthe end these two things are independent.\n\nimho, everybody can define extension members for whatever they like, and \nthere is no mechanism to avoid or even detect conflicts with others \ndefining an identically named extension either standalone or as part of \na new type they've defined. maybe that's not ideal, but that's what we \nhave in the current spec.\n",
+          "createdAt": "2022-04-18T21:24:44Z",
+          "updatedAt": "2022-04-18T21:24:44Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "> Problem type definitions MAY extend the problem details object with additional members.\r\n\r\n",
+          "createdAt": "2022-04-18T22:23:43Z",
+          "updatedAt": "2022-04-18T22:23:43Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "> Note that because extensions are effectively put into a namespace by the problem type, it is not possible to define new \"standard\" members without defining a new media type.",
+          "createdAt": "2022-04-18T22:24:07Z",
+          "updatedAt": "2022-04-18T22:24:07Z"
+        },
+        {
+          "author": "olijaun",
+          "authorAssociation": "NONE",
+          "body": "> Problem type definitions MAY extend the problem details object with additional members.\r\n\r\nOk, thanks @mnot. This statement in addition to your statement about \"control of the type\" makes it clear to me.  I'm not controlling the problem type \"about:blank\" definition (it's controlled by the RFC) so I cannot add additional members to \"about:blank\" but I can add them to my own problem types.\r\n",
+          "createdAt": "2022-04-19T08:23:04Z",
+          "updatedAt": "2022-04-19T08:24:28Z"
+        }
+      ]
+    },
+    {
+      "number": 42,
+      "id": "I_kwDOE-NsGs5IAS4Q",
+      "title": "The validation-error example is wrong(!/?)",
+      "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/42",
+      "state": "OPEN",
+      "author": "olijaun",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Hi\r\n\r\nIn the spec there is a validation-error problem example:\r\n\r\n```\r\nHTTP/1.1 400 Bad Request\r\nContent-Type: application/problem+json\r\nContent-Language: en\r\n\r\n{\r\n \"type\": \"https://example.net/validation-error\",\r\n \"title\": \"Your request is not valid.\",\r\n \"causes\": [\r\n             {\r\n               \"detail\": \"must be a positive integer\",\r\n               \"problem-pointer\": \"#/age\"\r\n             },\r\n             {\r\n               \"detail\": \"must be 'green', 'red' or 'blue'\",\r\n               \"problem-pointer\": \"#/profile/color\"\r\n             }\r\n          ]\r\n  }\r\n```\r\n\r\nIn section 3.2 (Extension Members) it says:\r\n\r\n> Similarly, the \"Multi-Status\" example defines two extensions -- \"causes\" and \"problem-pointer\".\r\n\r\nThis actually means that each element in \"causes\" is a problem itself (otherwise there would not be two extensions but only one).\r\n\r\nIf we assume that each element in \"causes\" is a problem detail - then where is the type member? According to the RFC the type is \"about:blank\" if it is not specified. But then (according to the response of my other question https://github.com/ietf-wg-httpapi/rfc7807bis/issues/40 ) you can't define a custom extension for \"about:blank\".\r\n\r\nIf we would assume that the type of an \"embedded\" problem details is always the same as the one it is embedded then we assume something that is not part of the spec (or did I not see it?).\r\n\r\nWe could also say that the elements inside \"causes\" are not problem details but then we should remove the statement that the \"example defines two extensions\". It would only define ONE extension (the \"causes\").\r\n",
+      "createdAt": "2022-04-19T09:11:57Z",
+      "updatedAt": "2022-04-19T09:11:57Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 43,
+      "id": "I_kwDOE-NsGs5IAX3W",
+      "title": "Clarifying extension member scoping",
+      "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/43",
+      "state": "OPEN",
+      "author": "dret",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "dret"
+      ],
+      "labels": [],
+      "body": "Following the discussion in #40 made me think that we could tighten the language around extension member scope.\r\n\r\n> Note that because extensions are effectively put into a namespace by the problem type, it is not possible to define new \"standard\" members without defining a new media type.\r\n\r\n\"Effectively\" seems a bit odd here. Are they put into a namespace or not? If they do, then processing rules follow that we may want to spell out:\r\n\r\n> Because extension members are put into a namespace by the problem type, extension members MUST only be processed when they occur for a problem type that the consumer is expecting. If an extension member is recognized by its name but in the context of a problem type that the consumer is not expecting for that member, then the extension member MUST be ignored.\r\n> In addition, because extension members are put into a namespace by the problem type, it is not possible to define new \"standard\" members (i.e., members that can be used with any problem type) without defining a new media type.\r\n\r\nMaybe that's not good wording, but it seems to me that the current wording may be a little too vague.",
+      "createdAt": "2022-04-19T09:26:01Z",
+      "updatedAt": "2022-04-19T09:29:00Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "dret",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I just realized that my above text clashes with https://github.com/ietf-wg-httpapi/rfc7807bis/pull/41 but once that one is merged I can come up with a suggestion that works with the updated draft text.",
+          "createdAt": "2022-04-19T09:29:00Z",
+          "updatedAt": "2022-04-19T09:29:00Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -4101,6 +4186,32 @@
           ]
         }
       ]
+    },
+    {
+      "number": 41,
+      "id": "PR_kwDOE-NsGs42YsCs",
+      "title": "Allow future standard extensions",
+      "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/pull/41",
+      "state": "OPEN",
+      "author": "mnot",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #36",
+      "createdAt": "2022-04-18T22:28:40Z",
+      "updatedAt": "2022-04-18T22:28:40Z",
+      "baseRepository": "ietf-wg-httpapi/rfc7807bis",
+      "baseRefName": "main",
+      "baseRefOid": "9ffe01d09d6c595e7419df5f32c0efe33bf2bb36",
+      "headRepository": "ietf-wg-httpapi/rfc7807bis",
+      "headRefName": "mnot/36",
+      "headRefOid": "1cb2f4f0f012027304c40d5d6c13f8d9d9e612ab",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
