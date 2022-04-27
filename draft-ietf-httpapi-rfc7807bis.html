@@ -1126,7 +1126,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-requirements" class="xref">Requirements</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-notational-conventions" class="xref">Notational Conventions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-the-problem-details-json-ob" class="xref">The Problem Details JSON Object</a></p>
@@ -1223,10 +1223,10 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <p id="section-1-8">This specification's aim is to define common error formats for applications that need one so that they aren't required to define their own, or worse, tempted to redefine the semantics of existing HTTP status codes. Even if an application chooses not to use it to convey errors, reviewing its design can help guide the design decisions faced when conveying errors in an existing format.<a href="#section-1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="requirements">
+<div id="notational-conventions">
 <section id="section-2">
-      <h2 id="name-requirements">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-requirements" class="section-name selfRef">Requirements</a>
+      <h2 id="name-notational-conventions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-notational-conventions" class="section-name selfRef">Notational Conventions</a>
       </h2>
 <p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 </section>
@@ -1359,9 +1359,8 @@ tag:mnot@mnot.net,2021-09-17:OutOfLuck
 <p id="section-3.2-1">Problem type definitions MAY extend the problem details object with additional members.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">For example, our "out of credit" problem above defines two such extensions -- "balance" and "accounts" to convey additional, problem-specific information.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">Similarly, the "validation error" example defines a "causes" extension that contains a list of individual problems of that type found, with details and a pointer to the location of the problem.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">two extensions -- "causes" and "problem-pointer". Extensions like "problem-pointer" are more appropriate to use for problems associated with client side errors 4xx only.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">Clients consuming problem details MUST ignore any such extensions that they don't recognize; this allows problem types to evolve and include additional information in the future.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.2-6">Future updates to this specification might define additional members that are available to all problem types. To avoid conflicts, extension member names SHOULD NOT start with the "*" character.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Clients consuming problem details MUST ignore any such extensions that they don't recognize; this allows problem types to evolve and include additional information in the future.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">Future updates to this specification might define additional members that are available to all problem types. To avoid conflicts, extension member names SHOULD NOT start with the "*" character.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

@@ -60,7 +60,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-   2.  Requirements
+   2.  Notational Conventions
    3.  The Problem Details JSON Object
      3.1.  Members of a Problem Details Object
        3.1.1.  "type"
@@ -136,7 +136,7 @@ Table of Contents
    convey errors, reviewing its design can help guide the design
    decisions faced when conveying errors in an existing format.
 
-2.  Requirements
+2.  Notational Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -346,10 +346,6 @@ Table of Contents
    Similarly, the "validation error" example defines a "causes"
    extension that contains a list of individual problems of that type
    found, with details and a pointer to the location of the problem.
-
-   two extensions -- "causes" and "problem-pointer".  Extensions like
-   "problem-pointer" are more appropriate to use for problems associated
-   with client side errors 4xx only.
 
    Clients consuming problem details MUST ignore any such extensions
    that they don't recognize; this allows problem types to evolve and
