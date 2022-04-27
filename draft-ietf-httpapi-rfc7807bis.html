@@ -1361,7 +1361,7 @@ tag:mnot@mnot.net,2021-09-17:OutOfLuck
 <p id="section-3.2-3">Similarly, the "validation error" example defines a "causes" extension that contains a list of individual problems of that type found, with details and a pointer to the location of the problem.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.2-4">two extensions -- "causes" and "problem-pointer". Extensions like "problem-pointer" are more appropriate to use for problems associated with client side errors 4xx only.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">Clients consuming problem details MUST ignore any such extensions that they don't recognize; this allows problem types to evolve and include additional information in the future.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.2-6">Note that because extensions are effectively put into a namespace by the problem type, it is not possible to define new "standard" members without defining a new media type.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">Future updates to this specification might define additional members that are available to all problem types. To avoid conflicts, extension member names SHOULD NOT start with the "*" character.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
