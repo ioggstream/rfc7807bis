@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-04-24T01:43:27.889246+00:00",
+  "timestamp": "2022-04-28T02:33:20.945574+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -1837,7 +1837,7 @@
       "labels": [],
       "body": "Should we define a header that can carry problem details? \r\n\r\nE.g., for the first example in the spec:\r\n\r\n~~~ json\r\n{\r\n \"type\": \"https://example.com/probs/out-of-credit\",\r\n \"title\": \"You do not have enough credit.\",\r\n \"detail\": \"Your current balance is 30, but that costs 50.\",\r\n \"instance\": \"/account/12345/msgs/abc\",\r\n \"balance\": 30,\r\n \"accounts\": [\"/account/12345\",\r\n              \"/account/67890\"]\r\n}\r\n~~~\r\n\r\na workable mapping might be to use [Structured Fields](https://www.rfc-editor.org/rfc/rfc8941.html) to represent the top-level members of the object, like this:\r\n\r\n~~~\r\nProblem-Details: type=\"https://example.com/probs/out-of-credit\", \r\n          title=\"You do not have enough credit.\", \r\n          detail=\"Your current balance is 30, but that costs 50.\", \r\n          instance=\"/account/12345/msgs/abc\", \r\n          balance=30\r\n~~~\r\n\r\nThat drops any extensions that are not simple values, but I think that's a reasonable tradeoff...\r\n\r\nWould this be useful?",
       "createdAt": "2022-02-07T01:04:12Z",
-      "updatedAt": "2022-04-14T23:42:38Z",
+      "updatedAt": "2022-04-27T16:51:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -2007,6 +2007,20 @@
           "body": "@olijaun I would expect a `Problem` header along with an HTML document for the same reason I would expect a server to respond with a 4xx code (instead of a generic 400 one). It provides more information about the nature of the error to the user agent.\r\n\r\nThat is, the Problem header is probably intended for use by the user agent itself\u2014not the webpage. (Although I agree, a webpage should be able to access the response headers that it was delivered with, except possibly Set-Cookie.)",
           "createdAt": "2022-04-14T23:42:37Z",
           "updatedAt": "2022-04-14T23:42:37Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "Coming back to this, it seems like there's some support for adding this, but it's not especially strong. I can't see too many risks of including it in the spec (obvious worst case: it doesn't get used). That's not enough to justify including it, of course.\r\n\r\n@richsalz @darrelmiller perhaps a consensus call on list is in order?",
+          "createdAt": "2022-04-27T04:02:58Z",
+          "updatedAt": "2022-04-27T04:02:58Z"
+        },
+        {
+          "author": "richsalz",
+          "authorAssociation": "NONE",
+          "body": "Sure, a consensus call is fine. But could you write a summary of this issue and post to the list? ",
+          "createdAt": "2022-04-27T16:51:01Z",
+          "updatedAt": "2022-04-27T16:51:01Z"
         }
       ]
     },
@@ -2015,15 +2029,15 @@
       "id": "I_kwDOE-NsGs5GQC2E",
       "title": "Forward compatibility",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/36",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "awwright",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "([In reply to #32](https://github.com/ietf-wg-httpapi/rfc7807bis/issues/32#issuecomment-1076569614), which I think is blocked by this issue.)\r\n\r\nI would call this specification \"forward compatible\" if we can add new features to it without interfering with existing compliant implementations. This is important so that standards can evolve to support new functionality, like proposed in #32.\r\n\r\nIt does not appear to me that there's any mechanism for forward compatibility, and this is noted:\r\n\r\n>    Note that because extensions are effectively put into a namespace by\r\n   the problem type, it is not possible to define new \"standard\" members\r\n   without defining a new media type.\r\n\r\nWhile the media type can be \"extended\" in some fashion, this is not the same as forward compatibility, because all extensions are by definition user extensions, so they cannot be standardized. I.e. there is no way to define new \"global\" members.\r\n\r\nI think this is important to fix. I see a few options:\r\n\r\n(1) Note how the concept of \"user\" extensions has some amount of ambiguity. In order to know what a non-standard member means, you have to know _who_ issued the Problem document. But there's no standard way to encode this! (It does say the type is \"effectively\" a namespace for extensions, but this doesn't seem like particularly authoritative language.) Applications that are tightly coupled with a specific API may not have trouble consuming user extensions, but other user-agents (e.g. spiders) may have a problem deciphering them. Because of this, I think we could more rigorously specify the behavior without significant breakage \"in the wild\". For example, specify that extension members must use a URI, and all other members have a standard definition. Or, choose some prefix that sorts high in ASCII, like `!` or `$`, to indicate standard \"global\" members.\r\n\r\n(2) If this still causes too much breakage, we could either reserve the member names that would cause breakage, or I would support minting a new media type.\r\n\r\nWe could also consider defining a JSON-LD vocabulary. There's likely a good way to encode the problem details that's easily detectable as a document describing the error, and having a standardized form and properties, while also being easily extensible for specific types of problems/errors.\r\n",
       "createdAt": "2022-03-23T20:12:37Z",
-      "updatedAt": "2022-04-18T22:28:56Z",
-      "closedAt": null,
+      "updatedAt": "2022-04-27T04:04:33Z",
+      "closedAt": "2022-04-27T04:04:33Z",
       "comments": [
         {
           "author": "mnot",
@@ -2073,6 +2087,13 @@
           "body": "See PR #41 ",
           "createdAt": "2022-04-18T22:28:55Z",
           "updatedAt": "2022-04-18T22:28:55Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "Merging, with the expectation that we'll discuss it on list and advertise this change to make sure we're not clashing with anyone. Even if we don't do the `Problem` header field now, doing something compatible with SH dictionaries seems like a good idea so that it's future-proof.",
+          "createdAt": "2022-04-27T04:04:21Z",
+          "updatedAt": "2022-04-27T04:04:21Z"
         }
       ]
     },
@@ -2133,15 +2154,15 @@
       "id": "I_kwDOE-NsGs5IAS4Q",
       "title": "The validation-error example is wrong(!/?)",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/42",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "olijaun",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Hi\r\n\r\nIn the spec there is a validation-error problem example:\r\n\r\n```\r\nHTTP/1.1 400 Bad Request\r\nContent-Type: application/problem+json\r\nContent-Language: en\r\n\r\n{\r\n \"type\": \"https://example.net/validation-error\",\r\n \"title\": \"Your request is not valid.\",\r\n \"causes\": [\r\n             {\r\n               \"detail\": \"must be a positive integer\",\r\n               \"problem-pointer\": \"#/age\"\r\n             },\r\n             {\r\n               \"detail\": \"must be 'green', 'red' or 'blue'\",\r\n               \"problem-pointer\": \"#/profile/color\"\r\n             }\r\n          ]\r\n  }\r\n```\r\n\r\nIn section 3.2 (Extension Members) it says:\r\n\r\n> Similarly, the \"Multi-Status\" example defines two extensions -- \"causes\" and \"problem-pointer\".\r\n\r\nThis actually means that each element in \"causes\" is a problem itself (otherwise there would not be two extensions but only one).\r\n\r\nIf we assume that each element in \"causes\" is a problem detail - then where is the type member? According to the RFC the type is \"about:blank\" if it is not specified. But then (according to the response of my other question https://github.com/ietf-wg-httpapi/rfc7807bis/issues/40 ) you can't define a custom extension for \"about:blank\".\r\n\r\nIf we would assume that the type of an \"embedded\" problem details is always the same as the one it is embedded then we assume something that is not part of the spec (or did I not see it?).\r\n\r\nWe could also say that the elements inside \"causes\" are not problem details but then we should remove the statement that the \"example defines two extensions\". It would only define ONE extension (the \"causes\").\r\n",
       "createdAt": "2022-04-19T09:11:57Z",
-      "updatedAt": "2022-04-19T09:11:57Z",
-      "closedAt": null,
+      "updatedAt": "2022-04-27T03:50:03Z",
+      "closedAt": "2022-04-27T03:50:03Z",
       "comments": []
     },
     {
@@ -4192,24 +4213,26 @@
       "id": "PR_kwDOE-NsGs42YsCs",
       "title": "Allow future standard extensions",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/pull/41",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mnot",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Fixes #36",
       "createdAt": "2022-04-18T22:28:40Z",
-      "updatedAt": "2022-04-18T22:28:40Z",
+      "updatedAt": "2022-04-27T04:04:34Z",
       "baseRepository": "ietf-wg-httpapi/rfc7807bis",
       "baseRefName": "main",
       "baseRefOid": "9ffe01d09d6c595e7419df5f32c0efe33bf2bb36",
       "headRepository": "ietf-wg-httpapi/rfc7807bis",
       "headRefName": "mnot/36",
       "headRefOid": "1cb2f4f0f012027304c40d5d6c13f8d9d9e612ab",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-04-27T04:04:33Z",
+      "mergedAt": "2022-04-27T04:04:33Z",
+      "mergedBy": "mnot",
+      "mergeCommit": {
+        "oid": "7613ae73ab7aa579671789e37c82b664f2c02412"
+      },
       "comments": [],
       "reviews": []
     }
