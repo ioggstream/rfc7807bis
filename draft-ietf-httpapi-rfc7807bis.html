@@ -1025,7 +1025,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Nottingham, et al.</td>
-<td class="center">Expires 29 October 2022</td>
+<td class="center">Expires 30 October 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1041,12 +1041,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <a href="https://www.rfc-editor.org/rfc/rfc7807" class="eref">7807</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-04-27" class="published">27 April 2022</time>
+<time datetime="2022-04-28" class="published">28 April 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-10-29">29 October 2022</time></dd>
+<dd class="expires"><time datetime="2022-10-30">30 October 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 October 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 October 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1267,7 +1267,7 @@ Content-Language: en
 {
  "type": "https://example.net/validation-error",
  "title": "Your request is not valid.",
- "causes": [
+ "errors": [
              {
                "detail": "must be a positive integer",
                "problem-pointer": "#/age"
@@ -1280,7 +1280,7 @@ Content-Language: en
   }
 </pre><a href="#section-3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-3-8">The fictional problem type here defines the "causes" extension, an array that describes the details of multiple occurrences. Each member is an object containing "detail" to describe the issue, and "problem-pointer" to locate the problem within the request's content using a JSON Pointer <span>[<a href="#RFC6901" class="xref">RFC6901</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-8">The fictional problem type here defines the "errors" extension, an array that describes the details of each validation error. Each member is an object containing "detail" to describe the issue, and "problem-pointer" to locate the problem within the request's content using a JSON Pointer <span>[<a href="#RFC6901" class="xref">RFC6901</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <p id="section-3-9">When an API encounters multiple problems that do not share the same type, it is RECOMMENDED that the most relevant or urgent problem be represented in the response. While it is possible to create generic "batch" problem types that convey multiple, disparate types, they do not map well into HTTP semantics.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <div id="members">
 <section id="section-3.1">
@@ -1358,7 +1358,7 @@ tag:mnot@mnot.net,2021-09-17:OutOfLuck
         </h3>
 <p id="section-3.2-1">Problem type definitions MAY extend the problem details object with additional members.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">For example, our "out of credit" problem above defines two such extensions -- "balance" and "accounts" to convey additional, problem-specific information.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">Similarly, the "validation error" example defines a "causes" extension that contains a list of individual problems of that type found, with details and a pointer to the location of the problem.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">Similarly, the "validation error" example defines a "errors" extension that contains a list of individual error occurrences found, with details and a pointer to the location of each.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.2-4">Clients consuming problem details MUST ignore any such extensions that they don't recognize; this allows problem types to evolve and include additional information in the future.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <p id="section-3.2-5">Future updates to this specification might define additional members that are available to all problem types. To avoid conflicts, extension member names SHOULD NOT start with the "*" character.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
