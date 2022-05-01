@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-04-28T02:33:20.945574+00:00",
+  "timestamp": "2022-05-01T02:19:45.623000+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -1837,7 +1837,7 @@
       "labels": [],
       "body": "Should we define a header that can carry problem details? \r\n\r\nE.g., for the first example in the spec:\r\n\r\n~~~ json\r\n{\r\n \"type\": \"https://example.com/probs/out-of-credit\",\r\n \"title\": \"You do not have enough credit.\",\r\n \"detail\": \"Your current balance is 30, but that costs 50.\",\r\n \"instance\": \"/account/12345/msgs/abc\",\r\n \"balance\": 30,\r\n \"accounts\": [\"/account/12345\",\r\n              \"/account/67890\"]\r\n}\r\n~~~\r\n\r\na workable mapping might be to use [Structured Fields](https://www.rfc-editor.org/rfc/rfc8941.html) to represent the top-level members of the object, like this:\r\n\r\n~~~\r\nProblem-Details: type=\"https://example.com/probs/out-of-credit\", \r\n          title=\"You do not have enough credit.\", \r\n          detail=\"Your current balance is 30, but that costs 50.\", \r\n          instance=\"/account/12345/msgs/abc\", \r\n          balance=30\r\n~~~\r\n\r\nThat drops any extensions that are not simple values, but I think that's a reasonable tradeoff...\r\n\r\nWould this be useful?",
       "createdAt": "2022-02-07T01:04:12Z",
-      "updatedAt": "2022-04-27T16:51:01Z",
+      "updatedAt": "2022-04-28T08:47:15Z",
       "closedAt": null,
       "comments": [
         {
@@ -2021,6 +2021,13 @@
           "body": "Sure, a consensus call is fine. But could you write a summary of this issue and post to the list? ",
           "createdAt": "2022-04-27T16:51:01Z",
           "updatedAt": "2022-04-27T16:51:01Z"
+        },
+        {
+          "author": "benbucksch",
+          "authorAssociation": "NONE",
+          "body": "I like it a lot. Error messages are a serious problem point in most HTTP based APIs. Everybody rolls their own error spec, with slightly different semantics. It's good to have them specced consistently and sanely.\r\n\r\nThe semantics used in the spec are very sound. There's:\r\n* a unique computer-readable ID (type),\r\n* a human-readable and translated description of the generic problem,\r\n* a specific human-readable and translated description of the specific problem with parameters, and\r\n* custom computer-readable parameters for the values of this specific error.\r\nThis is great. I also love that you say that \"detail\" shall not be parsed, but custom values (\"extensions\") be used.\r\n\r\nI would just improve 2 aspects:\r\n\r\n* Add \"debug\" and \"stack\" as explicit additional fields. It's great that you specifically mandate that \"detail\" shall not contain debugging info. That's wise to define, because a field called \"detail\" is bound to be used for that. Unfortunately, most devs do not read specs, so if you have a field called \"detail\", I'm certain that devs are going to put stack traces in there. To avoid that urge, I would recommend to add two explicit fields \"debug\" and \"stack\". Both optional of course. But they should be two separate fields, because the stack is well-defined, and \"debug\" can be a dump of internal variables or anything else useful for debugging.\r\n\r\n* Be more tight in the definitions. Please mandate that the title and detail fields *are* in fact translated on the server side. The client cannot realistically do it, because the server can add new error conditions at any time, plus the business of including parameters in the user message. It's important that there is clarity about who is responsible for the translation of the error messages, and that this aspect is not left vague. So, I would define clearly: If there is a translation happening at all, then the server is translating the human-readable message, not the client.\r\n\r\nOther than these two simple changes: I like the spec a lot, and it's very much needed.\r\n\r\nThanks for your push for it!",
+          "createdAt": "2022-04-28T08:47:15Z",
+          "updatedAt": "2022-04-28T08:47:15Z"
         }
       ]
     },
