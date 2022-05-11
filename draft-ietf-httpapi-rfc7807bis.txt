@@ -16,8 +16,8 @@ Expires: 12 November 2022                                       S. Dalal
 Abstract
 
    This document defines a "problem detail" to carry machine-readable
-   details of errors in a HTTP response to avoid the need to define new
-   error response formats for HTTP APIs.
+   details of errors in HTTP response content and/or fields to avoid the
+   need to define new error response formats for HTTP APIs.
 
 Discussion Venues
 
@@ -69,15 +69,16 @@ Table of Contents
        3.1.4.  "detail"
        3.1.5.  "instance"
      3.2.  Extension Members
-   4.  Defining New Problem Types
-     4.1.  Example
-     4.2.  Registered Problem Types
-       4.2.1.  about:blank
-   5.  Security Considerations
-   6.  IANA Considerations
-   7.  References
-     7.1.  Normative References
-     7.2.  Informative References
+   4.  The Problem HTTP Field
+   5.  Defining New Problem Types
+     5.1.  Example
+     5.2.  Registered Problem Types
+       5.2.1.  about:blank
+   6.  Security Considerations
+   7.  IANA Considerations
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
    Appendix A.  JSON Schema for HTTP Problems
    Appendix B.  HTTP Problems and XML
    Appendix C.  Using Problem Details with Other Formats
@@ -92,8 +93,8 @@ Table of Contents
    human consumers of HTTP APIs have difficulty doing so.
 
    To address that shortcoming, this specification defines simple JSON
-   [RFC8259] and XML [XML] document formats to describe the specifics of
-   problem(s) encountered -- "problem details".
+   [RFC8259] and XML [XML] document formats and a HTTP field to describe
+   the specifics of problem(s) encountered -- "problem details".
 
    For example, consider a response indicating that the client's account
    doesn't have enough credit.  The API's designer might decide to use
@@ -109,7 +110,7 @@ Table of Contents
    of credit") with a URI [RFC3986].  HTTP APIs can use URIs under their
    control to identify problems specific to them, or can reuse existing
    ones to facilitate interoperability and leverage common semantics
-   (see Section 4.2).
+   (see Section 5.2).
 
    Problem details can contain other information, such as a URI
    identifying the problem's specific occurrence (effectively giving an
@@ -143,6 +144,9 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+   This document uses the following terminology from [STRUCTURED-FIELDS]
+   to specify syntax and parsing: Dictionary, String, and Integer.
 
 3.  The Problem Details JSON Object
 
@@ -271,7 +275,7 @@ Table of Contents
    HTTP status code used for the convenience of the consumer.
    Generators MUST use the same status code in the actual HTTP response,
    to assure that generic HTTP software that does not understand this
-   format still behaves correctly.  See Section 5 for further caveats
+   format still behaves correctly.  See Section 6 for further caveats
    regarding its use.
 
    Consumers can use the status member to determine what the original
@@ -356,7 +360,59 @@ Table of Contents
    starting with "*".  To avoid conflicts, extension member names SHOULD
    NOT start with the "*" character.
 
-4.  Defining New Problem Types
+   When creating extensions, problem type authors should choose their
+   names carefully.  To be used in the XML format (see Appendix B), they
+   will need to conform to the Name rule in Section 2.3 of [XML].  To be
+   used in the HTTP field (see Section 4), they will need to conform to
+   the Dictionary key syntax defined in Section 3.2 of
+   [STRUCTURED-FIELDS].
+
+   Problem type authors that wish their extensions to be usable in the
+   Problem HTTP field (see Section 4) will also need to define the
+   Structured Type(s) that their values are mapped to.
+
+4.  The Problem HTTP Field
+
+   Some problems might best be conveyed in a HTTP header or trailer
+   field, rather than in the message content.  For example, when a
+   problem does not prevent a successful response from being generated,
+   or when the problem's details are useful to software that does not
+   inspect the response content.
+
+   The Problem HTTP field allows a limited expression of a problem
+   object in HTTP headers or trailers.  It is a Dictionary Structured
+   Field (Section 3.2 of [STRUCTURED-FIELDS]) that can contain the
+   following keys, whose semantics and related requirements are
+   inherited from problem objects:
+
+   type:  the type value (see Section 3.1.1), as a String
+
+   status:  the status value (see Section 3.1.2), as an Integer
+
+   title:  The title value (see Section 3.1.3), as a String
+
+   detail:  The detail value (see Section 3.1.4), as a String
+
+   instance:  The instance value (see Section 3.1.5), as a String
+
+   The title and detail values MUST NOT be serialized in the Problem
+   field if they contain characters that are not allowed by String; see
+   Section 3.3.3 of [STRUCTURED-FIELDS].  Practically, this has the
+   effect of limiting them to ASCII strings.
+
+   An extension member (see Section 3.2) MAY occur in the Problem field
+   if its name is compatible with the syntax of Dictionary keys (see
+   Section 3.2 of [STRUCTURED-FIELDS]) and if the defining problem type
+   specifies a Structured Type to serialize the value into.
+
+   For example:
+
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+   Problem: type="https://example.net/problems/almost-out",
+      title="you're almost out of credit", credit_left=20
+
+5.  Defining New Problem Types
 
    When an HTTP API needs to define a response that indicates an error
    condition, it might be appropriate to do so by defining a new problem
@@ -368,7 +424,7 @@ Table of Contents
    Problem details are not a debugging tool for the underlying
    implementation; rather, they are a way to expose greater detail about
    the HTTP interface itself.  Designers of new problem types need to
-   carefully consider the Security Considerations (Section 5), in
+   carefully consider the Security Considerations (Section 6), in
    particular, the risk of exposing attack vectors by exposing
    implementation internals through error messages.
 
@@ -415,7 +471,7 @@ Table of Contents
    that it can be serialized in formats other than JSON), and they
    SHOULD be three characters or longer.
 
-4.1.  Example
+5.1.  Example
 
    For example, if you are publishing an HTTP API to your online
    shopping cart, you might need to indicate that the user is out of
@@ -428,7 +484,7 @@ Table of Contents
    formats -- JSON if your API is JSON-based, or XML if it uses that
    format.
 
-   To do so, you might look in the registry (Section 4.2) for an
+   To do so, you might look in the registry (Section 5.2) for an
    already-defined type URI that suits your purposes.  If one is
    available, you can reuse that URI.
 
@@ -437,7 +493,7 @@ Table of Contents
    appropriate title and the HTTP status code that it will be used with,
    along with what it means and how it should be handled.
 
-4.2.  Registered Problem Types
+5.2.  Registered Problem Types
 
    This specification defines the HTTP Problem Type registry for common,
    widely-used problem type URIs, to promote reuse.
@@ -470,7 +526,7 @@ Table of Contents
    (https://iana.org/assignments/http-problem-types) for details on
    where to send registration requests.
 
-4.2.1.  about:blank
+5.2.1.  about:blank
 
    This specification registers one Problem Type, "about:blank".
 
@@ -496,7 +552,7 @@ Table of Contents
    member.  Consequently, any problem details object not carrying an
    explicit "type" member implicitly uses this URI.
 
-5.  Security Considerations
+6.  Security Considerations
 
    When defining a new problem type, the information included must be
    carefully vetted.  Likewise, when actually generating a problem --
@@ -521,18 +577,27 @@ Table of Contents
    and virus scanners) are unlikely to know of or respect the status
    code conveyed in this member.
 
-6.  IANA Considerations
+7.  IANA Considerations
 
    Please update the "application/problem+json" and "application/
-   problem+xml" registrations in the Internet media types registry
-   [RFC6838]. to refer to this document.
+   problem+xml" registrations in the "Media Types" registry to refer to
+   this document.
 
-   Please create the HTTP Problem Types Registry, as specified in
-   Section 4.2, and populate it with "about:blank" as per Section 4.2.1.
+   Please create the "HTTP Problem Types Registry" as specified in
+   Section 5.2, and populate it with "about:blank" as per Section 5.2.1.
 
-7.  References
+   Please register the following entry into the "Hypertext Transfer
+   Protocol (HTTP) Field Name Registry":
 
-7.1.  Normative References
+   Field Name:  Problem
+
+   Status:  Permanent
+
+   Reference:  RFC nnnn
+
+8.  References
+
+8.1.  Normative References
 
    [HTTP]     Fielding, R. T., Nottingham, M., and J. Reschke, "HTTP
               Semantics", Work in Progress, Internet-Draft, draft-ietf-
@@ -569,13 +634,18 @@ Table of Contents
               DOI 10.17487/RFC8259, December 2017,
               <https://www.rfc-editor.org/rfc/rfc8259>.
 
+   [STRUCTURED-FIELDS]
+              Nottingham, M. and P-H. Kamp, "Structured Field Values for
+              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
+              <https://www.rfc-editor.org/rfc/rfc8941>.
+
    [XML]      Bray, T., Paoli, J., Sperberg-McQueen, M., Maler, E., and
               F. Yergeau, "Extensible Markup Language (XML) 1.0 (Fifth
               Edition)", World Wide Web Consortium Recommendation REC-
               xml-20081126, 26 November 2008,
               <https://www.w3.org/TR/2008/REC-xml-20081126>.
 
-7.2.  Informative References
+8.2.  Informative References
 
    [HTML5]    WHATWG, "HTML - Living Standard", n.d.,
               <https://html.spec.whatwg.org>.
@@ -602,19 +672,9 @@ Table of Contents
               RFC 4151, DOI 10.17487/RFC4151, October 2005,
               <https://www.rfc-editor.org/rfc/rfc4151>.
 
-   [RFC4918]  Dusseault, L., Ed., "HTTP Extensions for Web Distributed
-              Authoring and Versioning (WebDAV)", RFC 4918,
-              DOI 10.17487/RFC4918, June 2007,
-              <https://www.rfc-editor.org/rfc/rfc4918>.
-
    [RFC6694]  Moonesamy, S., Ed., "The "about" URI Scheme", RFC 6694,
               DOI 10.17487/RFC6694, August 2012,
               <https://www.rfc-editor.org/rfc/rfc6694>.
-
-   [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
-              Specifications and Registration Procedures", BCP 13,
-              RFC 6838, DOI 10.17487/RFC6838, January 2013,
-              <https://www.rfc-editor.org/rfc/rfc6838>.
 
    [RFC6901]  Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed.,
               "JavaScript Object Notation (JSON) Pointer", RFC 6901,
