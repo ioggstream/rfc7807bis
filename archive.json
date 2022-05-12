@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-01T02:19:45.623000+00:00",
+  "timestamp": "2022-05-12T01:57:56.164122+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -631,7 +631,7 @@
       "labels": [],
       "body": "In HydraCG/Specifications#178 we have been working on making the response in the case of an API error compatible with RFC 7807. Since Hydra is based on JSON-LD, and RFC 7807 does not provide an official JSON-LD Context, we have had to define the term (property) `status` of RFC 7807 in the scope and namespace of Hydra.\r\n\r\nI believe the use of RFC 7807 and JSON-LD in combination is a Venn diagram with a larger overlap than the one provided by Hydra and thus believe the community would be best served if RFC 7807bis provided its own JSON-LD Context. [Hydra's JSON-LD Context for RFC 7807](https://github.com/HydraCG/Specifications/blob/master/spec/latest/core/error.jsonld) looks like the following:\r\n\r\n```json\r\n{\r\n  \"@context\": {\r\n    \"rdf\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\",\r\n    \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\r\n    \"hydra\": \"http://www.w3.org/ns/hydra/core#\",\r\n    \"type\": { \"@id\": \"rdf:type\", \"@type\": \"@id\" },\r\n    \"title\": \"rdfs:label\",\r\n    \"detail\": \"rdfs:comment\",\r\n    \"status\": \"hydra:statusCode\",\r\n    \"instance\": { \"@id\": \"rdfs:seeAlso\", \"@type\": \"@id\" }\r\n  }\r\n}\r\n```",
       "createdAt": "2021-02-01T10:27:59Z",
-      "updatedAt": "2022-03-30T08:06:24Z",
+      "updatedAt": "2022-05-11T01:21:22Z",
       "closedAt": null,
       "comments": [
         {
@@ -857,6 +857,13 @@
           "body": "Ok, it's live again. And should stay that way :)",
           "createdAt": "2022-03-30T08:06:24Z",
           "updatedAt": "2022-03-30T08:06:24Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "I don't think we're going to be able to publish an RFC with a URL pointing to GitHub; while that's OK for things like a registry entry, the RFC Editor will balk at doing this.\r\n\r\nPopping up a level -- what's the reason this needs to be in the RFC?",
+          "createdAt": "2022-05-11T01:21:22Z",
+          "updatedAt": "2022-05-11T01:21:22Z"
         }
       ]
     },
@@ -1712,7 +1719,7 @@
       "labels": [],
       "body": "Example added for multiple problems shows use of an extension called `property_location` which is a JSON Pointer RFC6901 that points to the source of the problem in the corresponding HTTP request. Such an extension could only be used to show source of problem in 4xx class of errors such as Bad Request. HTTP request validation errors are the most common and most frequent client side error in HTTP APIs. \r\n\r\nOpening this issue on suggestion of @asbjornu...\r\n\r\n>Although property_location is just added as an example extension, having it in the specification gives it weight and authority. For something like this to be added (even if only as an extension to an example) I think it needs to be thoroughly discussed in a separate issue first.",
       "createdAt": "2021-10-16T19:41:15Z",
-      "updatedAt": "2022-03-24T03:30:03Z",
+      "updatedAt": "2022-05-11T01:18:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -1791,6 +1798,13 @@
           "body": "Agree that #36 blocks this.\r\n\r\nIF we do this, we'd need conventions for at least XML and JSON, I think -- which means that something more than just `problem-pointer` is necessary. ",
           "createdAt": "2022-03-24T03:30:02Z",
           "updatedAt": "2022-03-24T03:30:02Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "I started to rough this in. Working out the details made me realise this isn't a very good fit for a generic, standard member that's defined across *all* problem types, because:\r\n\r\n* it's format-specific; we'll need to define e.g., `json-pointer` and `xml-pointer` for those formats; other formats will have to define their own\r\n* it's specific to problem types that are about request state; it doesn't apply to problems that are about server-side state, for example\r\n* it's specific to problems that have exactly one location in the request that triggers the issue\r\n\r\nInstead, I think the example we have is sufficient, and we should close with no further action.",
+          "createdAt": "2022-05-11T01:18:20Z",
+          "updatedAt": "2022-05-11T01:18:20Z"
         }
       ]
     },
@@ -1830,15 +1844,15 @@
       "id": "I_kwDOE-NsGs5DE_26",
       "title": "Mapping problem details into a header?",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/35",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mnot",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Should we define a header that can carry problem details? \r\n\r\nE.g., for the first example in the spec:\r\n\r\n~~~ json\r\n{\r\n \"type\": \"https://example.com/probs/out-of-credit\",\r\n \"title\": \"You do not have enough credit.\",\r\n \"detail\": \"Your current balance is 30, but that costs 50.\",\r\n \"instance\": \"/account/12345/msgs/abc\",\r\n \"balance\": 30,\r\n \"accounts\": [\"/account/12345\",\r\n              \"/account/67890\"]\r\n}\r\n~~~\r\n\r\na workable mapping might be to use [Structured Fields](https://www.rfc-editor.org/rfc/rfc8941.html) to represent the top-level members of the object, like this:\r\n\r\n~~~\r\nProblem-Details: type=\"https://example.com/probs/out-of-credit\", \r\n          title=\"You do not have enough credit.\", \r\n          detail=\"Your current balance is 30, but that costs 50.\", \r\n          instance=\"/account/12345/msgs/abc\", \r\n          balance=30\r\n~~~\r\n\r\nThat drops any extensions that are not simple values, but I think that's a reasonable tradeoff...\r\n\r\nWould this be useful?",
       "createdAt": "2022-02-07T01:04:12Z",
-      "updatedAt": "2022-04-28T08:47:15Z",
-      "closedAt": null,
+      "updatedAt": "2022-05-11T01:10:26Z",
+      "closedAt": "2022-05-11T01:10:26Z",
       "comments": [
         {
           "author": "dret",
@@ -2177,7 +2191,7 @@
       "id": "I_kwDOE-NsGs5IAX3W",
       "title": "Clarifying extension member scoping",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/43",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "dret",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -2186,8 +2200,8 @@
       "labels": [],
       "body": "Following the discussion in #40 made me think that we could tighten the language around extension member scope.\r\n\r\n> Note that because extensions are effectively put into a namespace by the problem type, it is not possible to define new \"standard\" members without defining a new media type.\r\n\r\n\"Effectively\" seems a bit odd here. Are they put into a namespace or not? If they do, then processing rules follow that we may want to spell out:\r\n\r\n> Because extension members are put into a namespace by the problem type, extension members MUST only be processed when they occur for a problem type that the consumer is expecting. If an extension member is recognized by its name but in the context of a problem type that the consumer is not expecting for that member, then the extension member MUST be ignored.\r\n> In addition, because extension members are put into a namespace by the problem type, it is not possible to define new \"standard\" members (i.e., members that can be used with any problem type) without defining a new media type.\r\n\r\nMaybe that's not good wording, but it seems to me that the current wording may be a little too vague.",
       "createdAt": "2022-04-19T09:26:01Z",
-      "updatedAt": "2022-04-19T09:29:00Z",
-      "closedAt": null,
+      "updatedAt": "2022-05-11T08:47:26Z",
+      "closedAt": "2022-05-11T08:47:26Z",
       "comments": [
         {
           "author": "dret",
@@ -2195,6 +2209,20 @@
           "body": "I just realized that my above text clashes with https://github.com/ietf-wg-httpapi/rfc7807bis/pull/41 but once that one is merged I can come up with a suggestion that works with the updated draft text.",
           "createdAt": "2022-04-19T09:29:00Z",
           "updatedAt": "2022-04-19T09:29:00Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "I don't think adding new requirements here is a good idea. I've tweaked a bit to make things clearer.",
+          "createdAt": "2022-05-11T01:07:52Z",
+          "updatedAt": "2022-05-11T01:07:52Z"
+        },
+        {
+          "author": "dret",
+          "authorAssociation": "COLLABORATOR",
+          "body": "this proposal wasn't meant as adding new requirements, but as clarifying rules that may have been implicit before. thanks for the tweaks.",
+          "createdAt": "2022-05-11T08:34:08Z",
+          "updatedAt": "2022-05-11T08:34:08Z"
         }
       ]
     }
@@ -4158,24 +4186,26 @@
       "id": "PR_kwDOE-NsGs40-wsZ",
       "title": "Rough in a Problem HTTP field",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/pull/39",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mnot",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "A couple of decision points to note:\r\n\r\n* This mandates that title and detail contain ASCII strings. If\r\nfolks feel unicode support is important, that could be done by also\r\nallowing binary, or using some encoding.\r\n\r\n* This requires the problem type to define the SH type of any extensions.\r\nThey also could be inferred, I suppose - but if there's any JSON structure,\r\nthat'd get tricky.\r\n\r\nFor #35.",
       "createdAt": "2022-03-24T21:32:44Z",
-      "updatedAt": "2022-03-25T07:40:23Z",
+      "updatedAt": "2022-05-11T01:10:27Z",
       "baseRepository": "ietf-wg-httpapi/rfc7807bis",
       "baseRefName": "main",
-      "baseRefOid": "9ffe01d09d6c595e7419df5f32c0efe33bf2bb36",
+      "baseRefOid": "80145bbe017b98eacd259562d16412bf31ee8808",
       "headRepository": "ietf-wg-httpapi/rfc7807bis",
       "headRefName": "mnot/35",
-      "headRefOid": "b92cd02dfe02a6d341f31236f95a372890711821",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "45301c14facb1a950534d6c8ee4d57c8e4d15f82",
+      "closedAt": "2022-05-11T01:10:26Z",
+      "mergedAt": "2022-05-11T01:10:26Z",
+      "mergedBy": "mnot",
+      "mergeCommit": {
+        "oid": "90b9718539f667a3490af2778e9e35f9288c9ad6"
+      },
       "comments": [
         {
           "author": "mnot",
@@ -4199,7 +4229,7 @@
             "abbreviatedOid": "49851ee"
           },
           "author": "martinthomson",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "This seems like a fairly simple way to manage this.\r\n\r\nI'm most concerned about there being only one way to learn about a problem, which this directly challenges.  Including the problem report in the body of a 4xx response is unambiguous, whereas this means that you need to look in two places.",
           "createdAt": "2022-03-25T01:11:03Z",
