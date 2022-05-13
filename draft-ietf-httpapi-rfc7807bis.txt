@@ -6,8 +6,8 @@ HTTPAPI                                                    M. Nottingham
 Internet-Draft                                                          
 Obsoletes: 7807 (if approved)                                   E. Wilde
 Intended status: Standards Track                                        
-Expires: 12 November 2022                                       S. Dalal
-                                                             11 May 2022
+Expires: 14 November 2022                                       S. Dalal
+                                                             13 May 2022
 
 
                      Problem Details for HTTP APIs
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 November 2022.
+   This Internet-Draft will expire on 14 November 2022.
 
 Copyright Notice
 
@@ -93,7 +93,7 @@ Table of Contents
    human consumers of HTTP APIs have difficulty doing so.
 
    To address that shortcoming, this specification defines simple JSON
-   [RFC8259] and XML [XML] document formats and a HTTP field to describe
+   [JSON] and XML [XML] document formats and a HTTP field to describe
    the specifics of problem(s) encountered -- "problem details".
 
    For example, consider a response indicating that the client's account
@@ -107,7 +107,7 @@ Table of Contents
    the account).
 
    This specification identifies the specific "problem type" (e.g., "out
-   of credit") with a URI [RFC3986].  HTTP APIs can use URIs under their
+   of credit") with a URI [URI].  HTTP APIs can use URIs under their
    control to identify problems specific to them, or can reuse existing
    ones to facilitate interoperability and leverage common semantics
    (see Section 5.2).
@@ -118,7 +118,7 @@ Table of Contents
    last Thursday"), which can be useful for support or forensic
    purposes.
 
-   The data model for problem details is a JSON [RFC8259] object; when
+   The data model for problem details is a JSON [JSON] object; when
    serialized as a JSON document, it uses the "application/problem+json"
    media type.  Appendix B defines an equivalent XML format, which uses
    the "application/problem+xml" media type.
@@ -150,7 +150,7 @@ Table of Contents
 
 3.  The Problem Details JSON Object
 
-   The canonical model for problem details is a JSON [RFC8259] object.
+   The canonical model for problem details is a JSON [JSON] object.
 
    When serialized as a JSON document, that format is identified with
    the "application/problem+json" media type.
@@ -205,7 +205,7 @@ Table of Contents
    array that describes the details of each validation error.  Each
    member is an object containing "detail" to describe the issue, and
    "pointer" to locate the problem within the request's content using a
-   JSON Pointer [RFC6901].
+   JSON Pointer [JSON-POINTER].
 
    When an API encounters multiple problems that do not share the same
    type, it is RECOMMENDED that the most relevant or urgent problem be
@@ -222,10 +222,9 @@ Table of Contents
 
 3.1.1.  "type"
 
-   The "type" member is a JSON string containing a URI reference
-   [RFC3986] that identifies the problem type.  Consumers MUST use the
-   "type" URI (after resolution, if necessary) problem's primary
-   identifier.
+   The "type" member is a JSON string containing a URI reference [URI]
+   that identifies the problem type.  Consumers MUST use the "type" URI
+   (after resolution, if necessary) problem's primary identifier.
 
    When this member is not present, its value is assumed to be
    "about:blank".
@@ -238,7 +237,7 @@ Table of Contents
    is in use).
 
    When "type" contains a relative URI, it is resolved relative to the
-   document's base URI, as per [RFC3986], Section 5.  However, using
+   document's base URI, as per [URI], Section 5.  However, using
    relative URIs can cause confusion, and they might not be handled
    correctly by all implementations.
 
@@ -253,7 +252,7 @@ Table of Contents
    path (e.g., "/types/123").
 
    The type URI can also be a non-resolvable URI.  For example, the tag
-   URI scheme [RFC4151] can be used to uniquely identify problem types:
+   URI scheme [TAG] can be used to uniquely identify problem types:
 
    tag:mnot@mnot.net,2021-09-17:OutOfLuck
 
@@ -324,7 +323,7 @@ Table of Contents
    the server, but is opaque to the client.
 
    When "instance" contains a relative URI, it is resolved relative to
-   the document's base URI, as per [RFC3986], Section 5.  However, using
+   the document's base URI, as per [URI], Section 5.  However, using
    relative URIs can cause confusion, and they might not be handled
    correctly by all implementations.
 
@@ -462,14 +461,14 @@ Table of Contents
 
    A problem type definition MAY specify additional members on the
    problem details object.  For example, an extension might use typed
-   links [RFC8288] to another resource that machines can use to resolve
-   the problem.
+   links [WEB-LINKING] to another resource that machines can use to
+   resolve the problem.
 
    If such additional members are defined, their names SHOULD start with
-   a letter (ALPHA, as per [RFC5234], Appendix B.1) and SHOULD comprise
-   characters from ALPHA, DIGIT ([RFC5234], Appendix B.1), and "_" (so
-   that it can be serialized in formats other than JSON), and they
-   SHOULD be three characters or longer.
+   a letter (ALPHA, as per [ABNF], Appendix B.1) and SHOULD comprise
+   characters from ALPHA, DIGIT ([ABNF], Appendix B.1), and "_" (so that
+   it can be serialized in formats other than JSON), and they SHOULD be
+   three characters or longer.
 
 5.1.  Example
 
@@ -538,9 +537,9 @@ Table of Contents
 
    *  Reference: [this document]
 
-   The "about:blank" URI [RFC6694], when used as a problem type,
-   indicates that the problem has no additional semantics beyond that of
-   the HTTP status code.
+   The "about:blank" URI [ABOUT], when used as a problem type, indicates
+   that the problem has no additional semantics beyond that of the HTTP
+   status code.
 
    When "about:blank" is used, the title SHOULD be the same as the
    recommended HTTP status phrase for that code (e.g., "Not Found" for
@@ -599,26 +598,26 @@ Table of Contents
 
 8.1.  Normative References
 
+   [ABNF]     Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, RFC 5234,
+              DOI 10.17487/RFC5234, January 2008,
+              <https://www.rfc-editor.org/rfc/rfc5234>.
+
    [HTTP]     Fielding, R. T., Nottingham, M., and J. Reschke, "HTTP
               Semantics", Work in Progress, Internet-Draft, draft-ietf-
               httpbis-semantics-19, 12 September 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
               semantics-19>.
 
+   [JSON]     Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", STD 90, RFC 8259,
+              DOI 10.17487/RFC8259, December 2017,
+              <https://www.rfc-editor.org/rfc/rfc8259>.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
-
-   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
-              Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, DOI 10.17487/RFC3986, January 2005,
-              <https://www.rfc-editor.org/rfc/rfc3986>.
-
-   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
-              Specifications: ABNF", STD 68, RFC 5234,
-              DOI 10.17487/RFC5234, January 2008,
-              <https://www.rfc-editor.org/rfc/rfc5234>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -629,15 +628,15 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
-              Interchange Format", STD 90, RFC 8259,
-              DOI 10.17487/RFC8259, December 2017,
-              <https://www.rfc-editor.org/rfc/rfc8259>.
-
    [STRUCTURED-FIELDS]
               Nottingham, M. and P-H. Kamp, "Structured Field Values for
               HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8941>.
+
+   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [XML]      Bray, T., Paoli, J., Sperberg-McQueen, M., Maler, E., and
               F. Yergeau, "Extensible Markup Language (XML) 1.0 (Fifth
@@ -646,6 +645,10 @@ Table of Contents
               <https://www.w3.org/TR/2008/REC-xml-20081126>.
 
 8.2.  Informative References
+
+   [ABOUT]    Moonesamy, S., Ed., "The "about" URI Scheme", RFC 6694,
+              DOI 10.17487/RFC6694, August 2012,
+              <https://www.rfc-editor.org/rfc/rfc6694>.
 
    [HTML5]    WHATWG, "HTML - Living Standard", n.d.,
               <https://html.spec.whatwg.org>.
@@ -663,25 +666,23 @@ Table of Contents
               Languages (DSDL) -- Part 2: Grammar-based Validation --
               RELAX NG", ISO/IEC 19757-2, 2003.
 
+   [JSON-POINTER]
+              Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed.,
+              "JavaScript Object Notation (JSON) Pointer", RFC 6901,
+              DOI 10.17487/RFC6901, April 2013,
+              <https://www.rfc-editor.org/rfc/rfc6901>.
+
    [RDFA]     Adida, B., Birbeck, M., McCarron, S., and I. Herman, "RDFa
               Core 1.1 - Third Edition", World Wide Web Consortium
               Recommendation REC-rdfa-core-20150317, 17 March 2015,
               <https://www.w3.org/TR/2015/REC-rdfa-core-20150317>.
 
-   [RFC4151]  Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
+   [TAG]      Kindberg, T. and S. Hawke, "The 'tag' URI Scheme",
               RFC 4151, DOI 10.17487/RFC4151, October 2005,
               <https://www.rfc-editor.org/rfc/rfc4151>.
 
-   [RFC6694]  Moonesamy, S., Ed., "The "about" URI Scheme", RFC 6694,
-              DOI 10.17487/RFC6694, August 2012,
-              <https://www.rfc-editor.org/rfc/rfc6694>.
-
-   [RFC6901]  Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed.,
-              "JavaScript Object Notation (JSON) Pointer", RFC 6901,
-              DOI 10.17487/RFC6901, April 2013,
-              <https://www.rfc-editor.org/rfc/rfc6901>.
-
-   [RFC8288]  Nottingham, M., "Web Linking", RFC 8288,
+   [WEB-LINKING]
+              Nottingham, M., "Web Linking", RFC 8288,
               DOI 10.17487/RFC8288, October 2017,
               <https://www.rfc-editor.org/rfc/rfc8288>.
 

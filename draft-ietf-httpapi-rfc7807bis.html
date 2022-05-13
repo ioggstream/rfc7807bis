@@ -1025,7 +1025,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Nottingham, et al.</td>
-<td class="center">Expires 12 November 2022</td>
+<td class="center">Expires 14 November 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1041,12 +1041,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <a href="https://www.rfc-editor.org/rfc/rfc7807" class="eref">7807</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-05-11" class="published">11 May 2022</time>
+<time datetime="2022-05-13" class="published">13 May 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-11-12">12 November 2022</time></dd>
+<dd class="expires"><time datetime="2022-11-14">14 November 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1217,11 +1217,11 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">HTTP status codes (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics-19#section-15" class="relref">Section 15</a> of [<a href="#HTTP" class="xref">HTTP</a>]</span>) cannot always convey enough information about errors to be helpful. While humans using Web browsers can often understand an HTML <span>[<a href="#HTML5" class="xref">HTML5</a>]</span> response body, non-human consumers of HTTP APIs have difficulty doing so.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">To address that shortcoming, this specification defines simple JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span> and XML <span>[<a href="#XML" class="xref">XML</a>]</span> document formats and a HTTP field to describe the specifics of problem(s) encountered -- "problem details".<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">To address that shortcoming, this specification defines simple JSON <span>[<a href="#JSON" class="xref">JSON</a>]</span> and XML <span>[<a href="#XML" class="xref">XML</a>]</span> document formats and a HTTP field to describe the specifics of problem(s) encountered -- "problem details".<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">For example, consider a response indicating that the client's account doesn't have enough credit. The API's designer might decide to use the 403 Forbidden status code to inform HTTP-generic software (such as client libraries, caches, and proxies) of the response's general semantics. API-specific problem details (such as the why the server refused the request and the applicable account balance) can be carried in the response content, so that the client can act upon them appropriately (for example, triggering a transfer of more credit into the account).<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">This specification identifies the specific "problem type" (e.g., "out of credit") with a URI <span>[<a href="#RFC3986" class="xref">RFC3986</a>]</span>. HTTP APIs can use URIs under their control to identify problems specific to them, or can reuse existing ones to facilitate interoperability and leverage common semantics (see <a href="#registry" class="xref">Section 5.2</a>).<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-4">This specification identifies the specific "problem type" (e.g., "out of credit") with a URI <span>[<a href="#URI" class="xref">URI</a>]</span>. HTTP APIs can use URIs under their control to identify problems specific to them, or can reuse existing ones to facilitate interoperability and leverage common semantics (see <a href="#registry" class="xref">Section 5.2</a>).<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">Problem details can contain other information, such as a URI identifying the problem's specific occurrence (effectively giving an identifier to the concept "The time Joe didn't have enough credit last Thursday"), which can be useful for support or forensic purposes.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">The data model for problem details is a JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span> object; when serialized as a JSON document, it uses the "application/problem+json" media type. <a href="#xml-syntax" class="xref">Appendix B</a> defines an equivalent XML format, which uses the "application/problem+xml" media type.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">The data model for problem details is a JSON <span>[<a href="#JSON" class="xref">JSON</a>]</span> object; when serialized as a JSON document, it uses the "application/problem+json" media type. <a href="#xml-syntax" class="xref">Appendix B</a> defines an equivalent XML format, which uses the "application/problem+xml" media type.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">Note that problem details are (naturally) not the only way to convey the details of a problem in HTTP. If the response is still a representation of a resource, for example, it's often preferable to describe the relevant details in that application's format. Likewise, defined HTTP status codes cover many situations with no need to convey extra detail.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <p id="section-1-8">This specification's aim is to define common error formats for applications that need one so that they aren't required to define their own, or worse, tempted to redefine the semantics of existing HTTP status codes. Even if an application chooses not to use it to convey errors, reviewing its design can help guide the design decisions faced when conveying errors in an existing format.<a href="#section-1-8" class="pilcrow">¶</a></p>
 </section>
@@ -1240,7 +1240,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
       <h2 id="name-the-problem-details-json-ob">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-problem-details-json-ob" class="section-name selfRef">The Problem Details JSON Object</a>
       </h2>
-<p id="section-3-1">The canonical model for problem details is a JSON <span>[<a href="#RFC8259" class="xref">RFC8259</a>]</span> object.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">The canonical model for problem details is a JSON <span>[<a href="#JSON" class="xref">JSON</a>]</span> object.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">When serialized as a JSON document, that format is identified with the "application/problem+json" media type.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">For example, an HTTP response carrying JSON problem details:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="section-3-4">
@@ -1284,7 +1284,7 @@ Content-Language: en
   }
 </pre><a href="#section-3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-3-8">The fictional problem type here defines the "errors" extension, an array that describes the details of each validation error. Each member is an object containing "detail" to describe the issue, and "pointer" to locate the problem within the request's content using a JSON Pointer <span>[<a href="#RFC6901" class="xref">RFC6901</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-8">The fictional problem type here defines the "errors" extension, an array that describes the details of each validation error. Each member is an object containing "detail" to describe the issue, and "pointer" to locate the problem within the request's content using a JSON Pointer <span>[<a href="#JSON-POINTER" class="xref">JSON-POINTER</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <p id="section-3-9">When an API encounters multiple problems that do not share the same type, it is RECOMMENDED that the most relevant or urgent problem be represented in the response. While it is possible to create generic "batch" problem types that convey multiple, disparate types, they do not map well into HTTP semantics.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <div id="members">
 <section id="section-3.1">
@@ -1297,12 +1297,12 @@ Content-Language: en
           <h4 id="name-type">
 <a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-type" class="section-name selfRef">"type"</a>
           </h4>
-<p id="section-3.1.1-1">The "type" member is a JSON string containing a URI reference <span>[<a href="#RFC3986" class="xref">RFC3986</a>]</span> that identifies the problem type. Consumers MUST use the "type" URI (after resolution, if necessary) problem's primary identifier.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-1">The "type" member is a JSON string containing a URI reference <span>[<a href="#URI" class="xref">URI</a>]</span> that identifies the problem type. Consumers MUST use the "type" URI (after resolution, if necessary) problem's primary identifier.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-2">When this member is not present, its value is assumed to be "about:blank".<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-3">If the type URI is a locator (e.g., those with a "http" or "https" scheme), dereferencing it SHOULD provide human-readable documentation for the problem type (e.g., using HTML <span>[<a href="#HTML5" class="xref">HTML5</a>]</span>). However, consumers SHOULD NOT automatically dereference the type URI, unless they do so when providing information to developers (e.g., when a debugging tool is in use).<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-4">When "type" contains a relative URI, it is resolved relative to the document's base URI, as per <span>[<a href="#RFC3986" class="xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-5" class="relref">Section 5</a></span>. However, using relative URIs can cause confusion, and they might not be handled correctly by all implementations.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4">When "type" contains a relative URI, it is resolved relative to the document's base URI, as per <span>[<a href="#URI" class="xref">URI</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-5" class="relref">Section 5</a></span>. However, using relative URIs can cause confusion, and they might not be handled correctly by all implementations.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-5">For example, if the two resources "https://api.example.org/foo/bar/123" and "https://api.example.org/widget/456" both respond with a "type" equal to the relative URI reference "example-problem", when resolved they will identify different resources ("https://api.example.org/foo/bar/example-problem" and "https://api.example.org/widget/example-problem" respectively). As a result, it is RECOMMENDED that absolute URIs be used in "type" when possible, and that when relative URIs are used, they include the full path (e.g., "/types/123").<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-6">The type URI can also be a non-resolvable URI. For example, the tag URI scheme <span>[<a href="#RFC4151" class="xref">RFC4151</a>]</span> can be used to uniquely identify problem types:<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6">The type URI can also be a non-resolvable URI. For example, the tag URI scheme <span>[<a href="#TAG" class="xref">TAG</a>]</span> can be used to uniquely identify problem types:<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1.1-7">
 <pre>
 tag:mnot@mnot.net,2021-09-17:OutOfLuck
@@ -1349,7 +1349,7 @@ tag:mnot@mnot.net,2021-09-17:OutOfLuck
 <p id="section-3.1.5-1">The "instance" member is a JSON string containing a URI reference that identifies the specific occurrence of the problem.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.5-2">When the "instance" URI is dereferenceable, the problem details object can be fetched from it. It might also return information about the problem occurrence in other formats through use of proactive content negotiation (see <span>[<a href="#HTTP" class="xref">HTTP</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics-19#section-12.5.1" class="relref">Section 12.5.1</a></span>).<a href="#section-3.1.5-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.5-3">When the "instance" URI is not dereferenceable, it serves as a unique identifier for the problem occurrence that may be of significance to the server, but is opaque to the client.<a href="#section-3.1.5-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.5-4">When "instance" contains a relative URI, it is resolved relative to the document's base URI, as per <span>[<a href="#RFC3986" class="xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-5" class="relref">Section 5</a></span>. However, using relative URIs can cause confusion, and they might not be handled correctly by all implementations.<a href="#section-3.1.5-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-4">When "instance" contains a relative URI, it is resolved relative to the document's base URI, as per <span>[<a href="#URI" class="xref">URI</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-5" class="relref">Section 5</a></span>. However, using relative URIs can cause confusion, and they might not be handled correctly by all implementations.<a href="#section-3.1.5-4" class="pilcrow">¶</a></p>
 <p id="section-3.1.5-5">For example, if the two resources "https://api.example.org/foo/bar/123" and "https://api.example.org/widget/456" both respond with an "instance" equal to the relative URI reference "example-instance", when resolved they will identify different resources ("https://api.example.org/foo/bar/example-instance" and "https://api.example.org/widget/example-instance" respectively). As a result, it is RECOMMENDED that absolute URIs be used in "instance" when possible, and that when relative URIs are used, they include the full path (e.g., "/instances/123").<a href="#section-3.1.5-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1440,8 +1440,8 @@ Problem: type="https://example.net/problems/almost-out",
       </ol>
 <p id="section-5-9">Problem type definitions MAY specify the use of the Retry-After response header (<span>[<a href="#HTTP" class="xref">HTTP</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics-19#section-10.2.3" class="relref">Section 10.2.3</a></span>) in appropriate circumstances.<a href="#section-5-9" class="pilcrow">¶</a></p>
 <p id="section-5-10">A problem's type URI SHOULD resolve to HTML <span>[<a href="#HTML5" class="xref">HTML5</a>]</span> documentation that explains how to resolve the problem.<a href="#section-5-10" class="pilcrow">¶</a></p>
-<p id="section-5-11">A problem type definition MAY specify additional members on the problem details object. For example, an extension might use typed links <span>[<a href="#RFC8288" class="xref">RFC8288</a>]</span> to another resource that machines can use to resolve the problem.<a href="#section-5-11" class="pilcrow">¶</a></p>
-<p id="section-5-12">If such additional members are defined, their names SHOULD start with a letter (ALPHA, as per <span>[<a href="#RFC5234" class="xref">RFC5234</a>], <a href="https://rfc-editor.org/rfc/rfc5234#appendix-B.1" class="relref">Appendix B.1</a></span>) and SHOULD comprise characters from ALPHA, DIGIT (<span>[<a href="#RFC5234" class="xref">RFC5234</a>], <a href="https://rfc-editor.org/rfc/rfc5234#appendix-B.1" class="relref">Appendix B.1</a></span>), and "_" (so that it can be serialized in formats other than JSON), and they SHOULD be three characters or longer.<a href="#section-5-12" class="pilcrow">¶</a></p>
+<p id="section-5-11">A problem type definition MAY specify additional members on the problem details object. For example, an extension might use typed links <span>[<a href="#WEB-LINKING" class="xref">WEB-LINKING</a>]</span> to another resource that machines can use to resolve the problem.<a href="#section-5-11" class="pilcrow">¶</a></p>
+<p id="section-5-12">If such additional members are defined, their names SHOULD start with a letter (ALPHA, as per <span>[<a href="#ABNF" class="xref">ABNF</a>], <a href="https://rfc-editor.org/rfc/rfc5234#appendix-B.1" class="relref">Appendix B.1</a></span>) and SHOULD comprise characters from ALPHA, DIGIT (<span>[<a href="#ABNF" class="xref">ABNF</a>], <a href="https://rfc-editor.org/rfc/rfc5234#appendix-B.1" class="relref">Appendix B.1</a></span>), and "_" (so that it can be serialized in formats other than JSON), and they SHOULD be three characters or longer.<a href="#section-5-12" class="pilcrow">¶</a></p>
 <div id="example">
 <section id="section-5.1">
         <h3 id="name-example">
@@ -1490,7 +1490,7 @@ Problem: type="https://example.net/problems/almost-out",
             <li class="normal" id="section-5.2.1-2.4">Reference: [this document]<a href="#section-5.2.1-2.4" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-5.2.1-3">The "about:blank" URI <span>[<a href="#RFC6694" class="xref">RFC6694</a>]</span>, when used as a problem type, indicates that the problem has no additional semantics beyond that of the HTTP status code.<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.1-3">The "about:blank" URI <span>[<a href="#ABOUT" class="xref">ABOUT</a>]</span>, when used as a problem type, indicates that the problem has no additional semantics beyond that of the HTTP status code.<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.2.1-4">When "about:blank" is used, the title SHOULD be the same as the recommended HTTP status phrase for that code (e.g., "Not Found" for 404, and so on), although it MAY be localized to suit client preferences (expressed with the Accept-Language request header).<a href="#section-5.2.1-4" class="pilcrow">¶</a></p>
 <p id="section-5.2.1-5">Please note that according to how the "type" member is defined (<a href="#members" class="xref">Section 3.1</a>), the "about:blank" URI is the default value for that member. Consequently, any problem details object not carrying an explicit "type" member implicitly uses this URI.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
 </section>
@@ -1546,21 +1546,21 @@ Problem: type="https://example.net/problems/almost-out",
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="ABNF">[ABNF]</dt>
+        <dd>
+<span class="refAuthor">Crocker, D., Ed.</span> and <span class="refAuthor">P. Overell</span>, <span class="refTitle">"Augmented BNF for Syntax Specifications: ABNF"</span>, <span class="seriesInfo">STD 68</span>, <span class="seriesInfo">RFC 5234</span>, <span class="seriesInfo">DOI 10.17487/RFC5234</span>, <time datetime="2008-01" class="refDate">January 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5234">https://www.rfc-editor.org/rfc/rfc5234</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
         <dd>
 <span class="refAuthor">Fielding, R. T.</span>, <span class="refAuthor">Nottingham, M.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-semantics-19</span>, <time datetime="2021-09-12" class="refDate">12 September 2021</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics-19">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics-19</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="JSON">[JSON]</dt>
+        <dd>
+<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC3986">[RFC3986]</dt>
-        <dd>
-<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC5234">[RFC5234]</dt>
-        <dd>
-<span class="refAuthor">Crocker, D., Ed.</span> and <span class="refAuthor">P. Overell</span>, <span class="refTitle">"Augmented BNF for Syntax Specifications: ABNF"</span>, <span class="seriesInfo">STD 68</span>, <span class="seriesInfo">RFC 5234</span>, <span class="seriesInfo">DOI 10.17487/RFC5234</span>, <time datetime="2008-01" class="refDate">January 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5234">https://www.rfc-editor.org/rfc/rfc5234</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8126">[RFC8126]</dt>
         <dd>
@@ -1570,13 +1570,13 @@ Problem: type="https://example.net/problems/almost-out",
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC8259">[RFC8259]</dt>
-        <dd>
-<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
         <dd>
 <span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P-H. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 8941</span>, <span class="seriesInfo">DOI 10.17487/RFC8941</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8941">https://www.rfc-editor.org/rfc/rfc8941</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="URI">[URI]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="XML">[XML]</dt>
       <dd>
@@ -1589,6 +1589,10 @@ Problem: type="https://example.net/problems/almost-out",
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="ABOUT">[ABOUT]</dt>
+        <dd>
+<span class="refAuthor">Moonesamy, S., Ed.</span>, <span class="refTitle">"The "about" URI Scheme"</span>, <span class="seriesInfo">RFC 6694</span>, <span class="seriesInfo">DOI 10.17487/RFC6694</span>, <time datetime="2012-08" class="refDate">August 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6694">https://www.rfc-editor.org/rfc/rfc6694</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="HTML5">[HTML5]</dt>
         <dd>
 <span class="refAuthor">WHATWG</span>, <span class="refTitle">"HTML - Living Standard"</span>, <span>n.d.</span>, <span>&lt;<a href="https://html.spec.whatwg.org">https://html.spec.whatwg.org</a>&gt;</span>. </dd>
@@ -1601,23 +1605,19 @@ Problem: type="https://example.net/problems/almost-out",
         <dd>
 <span class="refAuthor">International Organization for Standardization</span>, <span class="refTitle">"Information Technology -- Document Schema Definition Languages (DSDL) -- Part 2: Grammar-based Validation -- RELAX NG"</span>, <span class="seriesInfo">ISO/IEC 19757-2</span>, <time datetime="2003" class="refDate">2003</time>. </dd>
 <dd class="break"></dd>
+<dt id="JSON-POINTER">[JSON-POINTER]</dt>
+        <dd>
+<span class="refAuthor">Bryan, P., Ed.</span>, <span class="refAuthor">Zyp, K.</span>, and <span class="refAuthor">M. Nottingham, Ed.</span>, <span class="refTitle">"JavaScript Object Notation (JSON) Pointer"</span>, <span class="seriesInfo">RFC 6901</span>, <span class="seriesInfo">DOI 10.17487/RFC6901</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6901">https://www.rfc-editor.org/rfc/rfc6901</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RDFA">[RDFA]</dt>
         <dd>
 <span class="refAuthor">Adida, B.</span>, <span class="refAuthor">Birbeck, M.</span>, <span class="refAuthor">McCarron, S.</span>, and <span class="refAuthor">I. Herman</span>, <span class="refTitle">"RDFa Core 1.1 - Third Edition"</span>, <span class="seriesInfo">World Wide Web Consortium Recommendation REC-rdfa-core-20150317</span>, <time datetime="2015-03-17" class="refDate">17 March 2015</time>, <span>&lt;<a href="https://www.w3.org/TR/2015/REC-rdfa-core-20150317">https://www.w3.org/TR/2015/REC-rdfa-core-20150317</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC4151">[RFC4151]</dt>
+<dt id="TAG">[TAG]</dt>
         <dd>
 <span class="refAuthor">Kindberg, T.</span> and <span class="refAuthor">S. Hawke</span>, <span class="refTitle">"The 'tag' URI Scheme"</span>, <span class="seriesInfo">RFC 4151</span>, <span class="seriesInfo">DOI 10.17487/RFC4151</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4151">https://www.rfc-editor.org/rfc/rfc4151</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC6694">[RFC6694]</dt>
-        <dd>
-<span class="refAuthor">Moonesamy, S., Ed.</span>, <span class="refTitle">"The "about" URI Scheme"</span>, <span class="seriesInfo">RFC 6694</span>, <span class="seriesInfo">DOI 10.17487/RFC6694</span>, <time datetime="2012-08" class="refDate">August 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6694">https://www.rfc-editor.org/rfc/rfc6694</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6901">[RFC6901]</dt>
-        <dd>
-<span class="refAuthor">Bryan, P., Ed.</span>, <span class="refAuthor">Zyp, K.</span>, and <span class="refAuthor">M. Nottingham, Ed.</span>, <span class="refTitle">"JavaScript Object Notation (JSON) Pointer"</span>, <span class="seriesInfo">RFC 6901</span>, <span class="seriesInfo">DOI 10.17487/RFC6901</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6901">https://www.rfc-editor.org/rfc/rfc6901</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8288">[RFC8288]</dt>
+<dt id="WEB-LINKING">[WEB-LINKING]</dt>
         <dd>
 <span class="refAuthor">Nottingham, M.</span>, <span class="refTitle">"Web Linking"</span>, <span class="seriesInfo">RFC 8288</span>, <span class="seriesInfo">DOI 10.17487/RFC8288</span>, <time datetime="2017-10" class="refDate">October 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8288">https://www.rfc-editor.org/rfc/rfc8288</a>&gt;</span>. </dd>
 <dd class="break"></dd>
