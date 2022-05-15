@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-12T01:57:56.164122+00:00",
+  "timestamp": "2022-05-15T02:02:02.544934+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -631,7 +631,7 @@
       "labels": [],
       "body": "In HydraCG/Specifications#178 we have been working on making the response in the case of an API error compatible with RFC 7807. Since Hydra is based on JSON-LD, and RFC 7807 does not provide an official JSON-LD Context, we have had to define the term (property) `status` of RFC 7807 in the scope and namespace of Hydra.\r\n\r\nI believe the use of RFC 7807 and JSON-LD in combination is a Venn diagram with a larger overlap than the one provided by Hydra and thus believe the community would be best served if RFC 7807bis provided its own JSON-LD Context. [Hydra's JSON-LD Context for RFC 7807](https://github.com/HydraCG/Specifications/blob/master/spec/latest/core/error.jsonld) looks like the following:\r\n\r\n```json\r\n{\r\n  \"@context\": {\r\n    \"rdf\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\",\r\n    \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\r\n    \"hydra\": \"http://www.w3.org/ns/hydra/core#\",\r\n    \"type\": { \"@id\": \"rdf:type\", \"@type\": \"@id\" },\r\n    \"title\": \"rdfs:label\",\r\n    \"detail\": \"rdfs:comment\",\r\n    \"status\": \"hydra:statusCode\",\r\n    \"instance\": { \"@id\": \"rdfs:seeAlso\", \"@type\": \"@id\" }\r\n  }\r\n}\r\n```",
       "createdAt": "2021-02-01T10:27:59Z",
-      "updatedAt": "2022-05-11T01:21:22Z",
+      "updatedAt": "2022-05-13T04:32:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -864,6 +864,20 @@
           "body": "I don't think we're going to be able to publish an RFC with a URL pointing to GitHub; while that's OK for things like a registry entry, the RFC Editor will balk at doing this.\r\n\r\nPopping up a level -- what's the reason this needs to be in the RFC?",
           "createdAt": "2022-05-11T01:21:22Z",
           "updatedAt": "2022-05-11T01:21:22Z"
+        },
+        {
+          "author": "asbjornu",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I don't think we're going to be able to publish an RFC with a URL pointing to GitHub; while that's OK for things like a registry entry, the RFC Editor will balk at doing this.\r\n\r\nYeah, that makes sense.\r\n\r\n> Popping up a level -- what's the reason this needs to be in the RFC?\r\n\r\nWhich \"this\" are you referring to? \ud83d\ude04 The vocabulary or the context?\r\n\r\nIf we are able to pull some strings in W3C to have them host a vocabulary URI such as `https://www.w3.org/ns/Problem`, it would be great to have that in the RFC so we have a shared and canonical vocabulary URI that every JSON-LD consumer of rfc7807bis can refer to.\r\n\r\nWhen it comes to the context URI, I'm not sure what we should do, but we may perhaps just provide a sample context in a non-normative section of the RFC and leave it up to consumers to host it themselves. The most important bit is to not cause fragmentation of the vocabulary URI by having every consumer mint their own.",
+          "createdAt": "2022-05-12T21:26:31Z",
+          "updatedAt": "2022-05-12T21:26:31Z"
+        },
+        {
+          "author": "tpluscode",
+          "authorAssociation": "NONE",
+          "body": "You talk of the error context document?\n\nFWIW it is http://www.w3.org/ns/hydra/error and not GitHub. It's not even a redirect but a rewrite.\n\nI mentioned it because the real one was down",
+          "createdAt": "2022-05-13T04:32:34Z",
+          "updatedAt": "2022-05-13T04:32:34Z"
         }
       ]
     },
