@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-15T02:02:02.544934+00:00",
+  "timestamp": "2022-05-17T01:51:55.342833+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -631,7 +631,7 @@
       "labels": [],
       "body": "In HydraCG/Specifications#178 we have been working on making the response in the case of an API error compatible with RFC 7807. Since Hydra is based on JSON-LD, and RFC 7807 does not provide an official JSON-LD Context, we have had to define the term (property) `status` of RFC 7807 in the scope and namespace of Hydra.\r\n\r\nI believe the use of RFC 7807 and JSON-LD in combination is a Venn diagram with a larger overlap than the one provided by Hydra and thus believe the community would be best served if RFC 7807bis provided its own JSON-LD Context. [Hydra's JSON-LD Context for RFC 7807](https://github.com/HydraCG/Specifications/blob/master/spec/latest/core/error.jsonld) looks like the following:\r\n\r\n```json\r\n{\r\n  \"@context\": {\r\n    \"rdf\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\",\r\n    \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\r\n    \"hydra\": \"http://www.w3.org/ns/hydra/core#\",\r\n    \"type\": { \"@id\": \"rdf:type\", \"@type\": \"@id\" },\r\n    \"title\": \"rdfs:label\",\r\n    \"detail\": \"rdfs:comment\",\r\n    \"status\": \"hydra:statusCode\",\r\n    \"instance\": { \"@id\": \"rdfs:seeAlso\", \"@type\": \"@id\" }\r\n  }\r\n}\r\n```",
       "createdAt": "2021-02-01T10:27:59Z",
-      "updatedAt": "2022-05-13T04:32:34Z",
+      "updatedAt": "2022-05-15T07:15:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -878,6 +878,13 @@
           "body": "You talk of the error context document?\n\nFWIW it is http://www.w3.org/ns/hydra/error and not GitHub. It's not even a redirect but a rewrite.\n\nI mentioned it because the real one was down",
           "createdAt": "2022-05-13T04:32:34Z",
           "updatedAt": "2022-05-13T04:32:34Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "Trying again. What is the actual text that you'd like to see in the RFC?\r\n\r\nIs it enough to add a short, non-normative appendix that looks like this?\r\n\r\n## JSON-LD \r\n\r\nThe JSON LD [ref] context for Problem Details can be found at <http://www.w3.org/ns/hydra/error>.",
+          "createdAt": "2022-05-15T07:15:30Z",
+          "updatedAt": "2022-05-15T07:15:30Z"
         }
       ]
     },
@@ -1726,15 +1733,15 @@
       "id": "I_kwDOE-NsGs49SA2C",
       "title": "Extension to show source of problem in request for 4xx class of errors",
       "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/32",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "sdatspun2",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Example added for multiple problems shows use of an extension called `property_location` which is a JSON Pointer RFC6901 that points to the source of the problem in the corresponding HTTP request. Such an extension could only be used to show source of problem in 4xx class of errors such as Bad Request. HTTP request validation errors are the most common and most frequent client side error in HTTP APIs. \r\n\r\nOpening this issue on suggestion of @asbjornu...\r\n\r\n>Although property_location is just added as an example extension, having it in the specification gives it weight and authority. For something like this to be added (even if only as an extension to an example) I think it needs to be thoroughly discussed in a separate issue first.",
       "createdAt": "2021-10-16T19:41:15Z",
-      "updatedAt": "2022-05-11T01:18:21Z",
-      "closedAt": null,
+      "updatedAt": "2022-05-17T00:15:21Z",
+      "closedAt": "2022-05-17T00:15:21Z",
       "comments": [
         {
           "author": "dret",
@@ -1819,6 +1826,27 @@
           "body": "I started to rough this in. Working out the details made me realise this isn't a very good fit for a generic, standard member that's defined across *all* problem types, because:\r\n\r\n* it's format-specific; we'll need to define e.g., `json-pointer` and `xml-pointer` for those formats; other formats will have to define their own\r\n* it's specific to problem types that are about request state; it doesn't apply to problems that are about server-side state, for example\r\n* it's specific to problems that have exactly one location in the request that triggers the issue\r\n\r\nInstead, I think the example we have is sufficient, and we should close with no further action.",
           "createdAt": "2022-05-11T01:18:20Z",
           "updatedAt": "2022-05-11T01:18:20Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "@sdatspun2 does that work for you?",
+          "createdAt": "2022-05-16T03:53:38Z",
+          "updatedAt": "2022-05-16T03:53:38Z"
+        },
+        {
+          "author": "sdatspun2",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@mnot Sorry for lateness. The example may work... for now. However, I also agree with @darrelmiller. For a graceful evolution of this spec, we need figure out if requirements like the 4xx errors or multiple problems should be handled by defining a new media type or there could be some other way which is not as restricting (good and bad). I am not sure if the \"best practices\" document helps here, it will not be a standard. If new media type, I would think that it would need to evolve in future too so it has to be defined with that requirement in mind. Should there be a corresponding media type for problem type schema which can be referred from the existing media type?\r\n\r\n>We seem to be in a catch-22 here. We can't add it as a standard property in the specification because that would require a new media type and it has been asserted that we should not use examples to suggest how people might extend the specification.\r\n\r\nWhere does this leave us? Should we consider a complementary \"best practices\" document that suggests ways in which errors could be extended? ",
+          "createdAt": "2022-05-17T00:03:35Z",
+          "updatedAt": "2022-05-17T00:03:35Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": ">  we need figure out if requirements like the 4xx errors or multiple problems should be handled by defining a new media type or there could be some other way which is not as restricting (good and bad). \r\n\r\nThose are separate issues. Do we need to resolve them to ship *this* document (keeping in mind that we now have a path for future standard extensions to be defined)?\r\n\r\n> Should we consider a complementary \"best practices\" document that suggests ways in which errors could be extended?\r\n\r\nI don't think that's necessary; what's important is that we build a community where those things can be discussed.\r\n\r\n",
+          "createdAt": "2022-05-17T00:15:12Z",
+          "updatedAt": "2022-05-17T00:15:12Z"
         }
       ]
     },
@@ -2237,6 +2265,39 @@
           "body": "this proposal wasn't meant as adding new requirements, but as clarifying rules that may have been implicit before. thanks for the tweaks.",
           "createdAt": "2022-05-11T08:34:08Z",
           "updatedAt": "2022-05-11T08:34:08Z"
+        }
+      ]
+    },
+    {
+      "number": 44,
+      "id": "I_kwDOE-NsGs5Jv29D",
+      "title": "Discuss usage of application/json",
+      "url": "https://github.com/ietf-wg-httpapi/rfc7807bis/issues/44",
+      "state": "OPEN",
+      "author": "dret",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "dret"
+      ],
+      "labels": [],
+      "body": "What about a short paragraph/section saying that APIs using the spec don't require clients to always add `Accept` with the problem-specific media types? I've now had several people asking this very question, and maybe we could clarify this by saying \"HTTP allows you to respond with media types other than those listed in `Accept`.\"",
+      "createdAt": "2022-05-16T14:52:18Z",
+      "updatedAt": "2022-05-16T21:52:05Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "dret",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Because I am curious to see what people think: https://twitter.com/dret/status/1526218691603464192",
+          "createdAt": "2022-05-16T15:11:41Z",
+          "updatedAt": "2022-05-16T15:11:41Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "We shouldn't restate or explain HTTP in our prose -- it's a specification, not a tutorial. Extrinsic materials can handle that.\r\n\r\nHowever, we can include an example that includes a request without Accept. ",
+          "createdAt": "2022-05-16T21:52:05Z",
+          "updatedAt": "2022-05-16T21:52:05Z"
         }
       ]
     }
