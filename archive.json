@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-17T01:51:55.342833+00:00",
+  "timestamp": "2022-05-19T02:01:43.559710+00:00",
   "repo": "ietf-wg-httpapi/rfc7807bis",
   "labels": [
     {
@@ -2282,7 +2282,7 @@
       "labels": [],
       "body": "What about a short paragraph/section saying that APIs using the spec don't require clients to always add `Accept` with the problem-specific media types? I've now had several people asking this very question, and maybe we could clarify this by saying \"HTTP allows you to respond with media types other than those listed in `Accept`.\"",
       "createdAt": "2022-05-16T14:52:18Z",
-      "updatedAt": "2022-05-16T21:52:05Z",
+      "updatedAt": "2022-05-17T05:57:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -2298,6 +2298,13 @@
           "body": "We shouldn't restate or explain HTTP in our prose -- it's a specification, not a tutorial. Extrinsic materials can handle that.\r\n\r\nHowever, we can include an example that includes a request without Accept. ",
           "createdAt": "2022-05-16T21:52:05Z",
           "updatedAt": "2022-05-16T21:52:05Z"
+        },
+        {
+          "author": "dret",
+          "authorAssociation": "COLLABORATOR",
+          "body": "On 2022-05-16 23:52, Mark Nottingham wrote:\n> We shouldn't restate or explain HTTP in our prose -- it's a \n> specification, not a tutorial. Extrinsic materials can handle that.\n> However, we can include an example that includes a request without Accept.\n\nok, sounds good. but if we do that then we should at least mention that \nwe're showing this because servers are free to respond with the \napplication/problem+json media type, even if clients don't specifically \nrequest it. is that ok for you?\n",
+          "createdAt": "2022-05-17T05:57:50Z",
+          "updatedAt": "2022-05-17T05:57:50Z"
         }
       ]
     }
