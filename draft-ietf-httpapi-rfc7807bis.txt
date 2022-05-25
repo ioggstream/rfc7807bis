@@ -6,8 +6,8 @@ HTTPAPI                                                    M. Nottingham
 Internet-Draft                                                          
 Obsoletes: 7807 (if approved)                                   E. Wilde
 Intended status: Standards Track                                        
-Expires: 14 November 2022                                       S. Dalal
-                                                             13 May 2022
+Expires: 26 November 2022                                       S. Dalal
+                                                             25 May 2022
 
 
                      Problem Details for HTTP APIs
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 November 2022.
+   This Internet-Draft will expire on 26 November 2022.
 
 Copyright Notice
 
@@ -151,11 +151,20 @@ Table of Contents
 3.  The Problem Details JSON Object
 
    The canonical model for problem details is a JSON [JSON] object.
-
-   When serialized as a JSON document, that format is identified with
+   When serialized in a JSON document, that format is identified with
    the "application/problem+json" media type.
 
-   For example, an HTTP response carrying JSON problem details:
+   For example:
+
+   POST /purchase HTTP/1.1
+   Host: store.example.com
+   Content-Type: application/json
+   Accept: application/json, application/problem+json
+
+   {
+     "item": 123456,
+     "quantity": 2
+   }
 
    HTTP/1.1 403 Forbidden
    Content-Type: application/problem+json
@@ -174,13 +183,17 @@ Table of Contents
    Here, the out-of-credit problem (identified by its type) indicates
    the reason for the 403 in "title", identifies the specific problem
    occurrence with "instance", gives occurrence-specific details in
-   "detail", and adds two extensions; "balance" conveys the account's
+   "detail", and adds two extensions: "balance" conveys the account's
    balance, and "accounts" lists links where the account can be topped
    up.
 
    When designed to accommodate it, problem-specific extensions can
    allow more than one instance of the same problem type to be conveyed.
    For example:
+
+   POST /details HTTP/1.1
+   Host: account.example.com
+   Accept: application/json
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
@@ -212,6 +225,10 @@ Table of Contents
    represented in the response.  While it is possible to create generic
    "batch" problem types that convey multiple, disparate types, they do
    not map well into HTTP semantics.
+
+   Note also that the API has responded with the application/
+   problem+json type, even though the client did not list it in Accept,
+   as is allowed by HTTP (see Section 12.5.1 of [HTTP]).
 
 3.1.  Members of a Problem Details Object
 
@@ -653,13 +670,6 @@ Table of Contents
    [HTML5]    WHATWG, "HTML - Living Standard", n.d.,
               <https://html.spec.whatwg.org>.
 
-   [I-D.draft-bhutton-json-schema-00]
-              Wright, A., Andrews, H., Hutton, B., and G. Dennis, "JSON
-              Schema: A Media Type for Describing JSON Documents", Work
-              in Progress, Internet-Draft, draft-bhutton-json-schema-00,
-              8 December 2020, <https://datatracker.ietf.org/doc/html/
-              draft-bhutton-json-schema-00>.
-
    [ISO-19757-2]
               International Organization for Standardization,
               "Information Technology -- Document Schema Definition
@@ -671,6 +681,13 @@ Table of Contents
               "JavaScript Object Notation (JSON) Pointer", RFC 6901,
               DOI 10.17487/RFC6901, April 2013,
               <https://www.rfc-editor.org/rfc/rfc6901>.
+
+   [JSON-SCHEMA]
+              Wright, A., Andrews, H., Hutton, B., and G. Dennis, "JSON
+              Schema: A Media Type for Describing JSON Documents", Work
+              in Progress, Internet-Draft, draft-bhutton-json-schema-00,
+              8 December 2020, <https://datatracker.ietf.org/doc/html/
+              draft-bhutton-json-schema-00>.
 
    [RDFA]     Adida, B., Birbeck, M., McCarron, S., and I. Herman, "RDFa
               Core 1.1 - Third Edition", World Wide Web Consortium
@@ -694,10 +711,9 @@ Table of Contents
 
 Appendix A.  JSON Schema for HTTP Problems
 
-   This section presents a non-normative JSON Schema
-   [I-D.draft-bhutton-json-schema-00] for HTTP Problem Details.  If
-   there is any disagreement between it and the text of the
-   specification, the latter prevails.
+   This section presents a non-normative JSON Schema [JSON-SCHEMA] for
+   HTTP Problem Details.  If there is any disagreement between it and
+   the text of the specification, the latter prevails.
 
    # NOTE: '\' line wrapping per RFC 8792
    {

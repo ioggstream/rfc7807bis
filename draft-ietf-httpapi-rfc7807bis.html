@@ -11,7 +11,7 @@
 <meta content='
        This document defines a "problem detail" to carry machine-readable details of errors in HTTP response content and/or fields to avoid the need to define new error response formats for HTTP APIs. 
     ' name="description">
-<meta content="xml2rfc 3.12.6" name="generator">
+<meta content="xml2rfc 3.12.7" name="generator">
 <meta content="status" name="keyword">
 <meta content="HTTP" name="keyword">
 <meta content="error" name="keyword">
@@ -21,7 +21,7 @@
 <meta content="XML" name="keyword">
 <meta content="draft-ietf-httpapi-rfc7807bis-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.12.6
+  xml2rfc 3.12.7
     Python 3.9.7
     appdirs 1.4.4
     ConfigArgParse 1.3
@@ -1025,7 +1025,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Nottingham, et al.</td>
-<td class="center">Expires 14 November 2022</td>
+<td class="center">Expires 26 November 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1041,12 +1041,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <a href="https://www.rfc-editor.org/rfc/rfc7807" class="eref">7807</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-05-13" class="published">13 May 2022</time>
+<time datetime="2022-05-25" class="published">25 May 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-11-14">14 November 2022</time></dd>
+<dd class="expires"><time datetime="2022-11-26">26 November 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1240,9 +1240,21 @@ svg [stroke="fill"], svg [fill^="#fff"] {
       <h2 id="name-the-problem-details-json-ob">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-problem-details-json-ob" class="section-name selfRef">The Problem Details JSON Object</a>
       </h2>
-<p id="section-3-1">The canonical model for problem details is a JSON <span>[<a href="#JSON" class="xref">JSON</a>]</span> object.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">When serialized as a JSON document, that format is identified with the "application/problem+json" media type.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">For example, an HTTP response carrying JSON problem details:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-1">The canonical model for problem details is a JSON <span>[<a href="#JSON" class="xref">JSON</a>]</span> object. When serialized in a JSON document, that format is identified with the "application/problem+json" media type.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">For example:<a href="#section-3-2" class="pilcrow">¶</a></p>
+<div id="section-3-3">
+<pre class="lang-http-message sourcecode">
+POST /purchase HTTP/1.1
+Host: store.example.com
+Content-Type: application/json
+Accept: application/json, application/problem+json
+
+{
+  "item": 123456,
+  "quantity": 2
+}
+</pre><a href="#section-3-3" class="pilcrow">¶</a>
+</div>
 <div id="section-3-4">
 <pre class="lang-http-message sourcecode">
 HTTP/1.1 403 Forbidden
@@ -1260,9 +1272,16 @@ Content-Language: en
 }
 </pre><a href="#section-3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-3-5">Here, the out-of-credit problem (identified by its type) indicates the reason for the 403 in "title", identifies the specific problem occurrence with "instance", gives occurrence-specific details in "detail", and adds two extensions; "balance" conveys the account's balance, and "accounts" lists links where the account can be topped up.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-5">Here, the out-of-credit problem (identified by its type) indicates the reason for the 403 in "title", identifies the specific problem occurrence with "instance", gives occurrence-specific details in "detail", and adds two extensions: "balance" conveys the account's balance, and "accounts" lists links where the account can be topped up.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <p id="section-3-6">When designed to accommodate it, problem-specific extensions can allow more than one instance of the same problem type to be conveyed. For example:<a href="#section-3-6" class="pilcrow">¶</a></p>
 <div id="section-3-7">
+<pre class="lang-http-message sourcecode">
+POST /details HTTP/1.1
+Host: account.example.com
+Accept: application/json
+</pre><a href="#section-3-7" class="pilcrow">¶</a>
+</div>
+<div id="section-3-8">
 <pre class="lang-http-message sourcecode">
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
@@ -1282,10 +1301,11 @@ Content-Language: en
              }
           ]
   }
-</pre><a href="#section-3-7" class="pilcrow">¶</a>
+</pre><a href="#section-3-8" class="pilcrow">¶</a>
 </div>
-<p id="section-3-8">The fictional problem type here defines the "errors" extension, an array that describes the details of each validation error. Each member is an object containing "detail" to describe the issue, and "pointer" to locate the problem within the request's content using a JSON Pointer <span>[<a href="#JSON-POINTER" class="xref">JSON-POINTER</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
-<p id="section-3-9">When an API encounters multiple problems that do not share the same type, it is RECOMMENDED that the most relevant or urgent problem be represented in the response. While it is possible to create generic "batch" problem types that convey multiple, disparate types, they do not map well into HTTP semantics.<a href="#section-3-9" class="pilcrow">¶</a></p>
+<p id="section-3-9">The fictional problem type here defines the "errors" extension, an array that describes the details of each validation error. Each member is an object containing "detail" to describe the issue, and "pointer" to locate the problem within the request's content using a JSON Pointer <span>[<a href="#JSON-POINTER" class="xref">JSON-POINTER</a>]</span>.<a href="#section-3-9" class="pilcrow">¶</a></p>
+<p id="section-3-10">When an API encounters multiple problems that do not share the same type, it is RECOMMENDED that the most relevant or urgent problem be represented in the response. While it is possible to create generic "batch" problem types that convey multiple, disparate types, they do not map well into HTTP semantics.<a href="#section-3-10" class="pilcrow">¶</a></p>
+<p id="section-3-11">Note also that the API has responded with the application/problem+json type, even though the client did not list it in Accept, as is allowed by HTTP (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics-19#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="xref">HTTP</a>]</span>).<a href="#section-3-11" class="pilcrow">¶</a></p>
 <div id="members">
 <section id="section-3.1">
         <h3 id="name-members-of-a-problem-detail">
@@ -1597,10 +1617,6 @@ Problem: type="https://example.net/problems/almost-out",
         <dd>
 <span class="refAuthor">WHATWG</span>, <span class="refTitle">"HTML - Living Standard"</span>, <span>n.d.</span>, <span>&lt;<a href="https://html.spec.whatwg.org">https://html.spec.whatwg.org</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.draft-bhutton-json-schema-00">[I-D.draft-bhutton-json-schema-00]</dt>
-        <dd>
-<span class="refAuthor">Wright, A.</span>, <span class="refAuthor">Andrews, H.</span>, <span class="refAuthor">Hutton, B.</span>, and <span class="refAuthor">G. Dennis</span>, <span class="refTitle">"JSON Schema: A Media Type for Describing JSON Documents"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bhutton-json-schema-00</span>, <time datetime="2020-12-08" class="refDate">8 December 2020</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-00">https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-00</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="ISO-19757-2">[ISO-19757-2]</dt>
         <dd>
 <span class="refAuthor">International Organization for Standardization</span>, <span class="refTitle">"Information Technology -- Document Schema Definition Languages (DSDL) -- Part 2: Grammar-based Validation -- RELAX NG"</span>, <span class="seriesInfo">ISO/IEC 19757-2</span>, <time datetime="2003" class="refDate">2003</time>. </dd>
@@ -1608,6 +1624,10 @@ Problem: type="https://example.net/problems/almost-out",
 <dt id="JSON-POINTER">[JSON-POINTER]</dt>
         <dd>
 <span class="refAuthor">Bryan, P., Ed.</span>, <span class="refAuthor">Zyp, K.</span>, and <span class="refAuthor">M. Nottingham, Ed.</span>, <span class="refTitle">"JavaScript Object Notation (JSON) Pointer"</span>, <span class="seriesInfo">RFC 6901</span>, <span class="seriesInfo">DOI 10.17487/RFC6901</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6901">https://www.rfc-editor.org/rfc/rfc6901</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="JSON-SCHEMA">[JSON-SCHEMA]</dt>
+        <dd>
+<span class="refAuthor">Wright, A.</span>, <span class="refAuthor">Andrews, H.</span>, <span class="refAuthor">Hutton, B.</span>, and <span class="refAuthor">G. Dennis</span>, <span class="refTitle">"JSON Schema: A Media Type for Describing JSON Documents"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bhutton-json-schema-00</span>, <time datetime="2020-12-08" class="refDate">8 December 2020</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-00">https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-00</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RDFA">[RDFA]</dt>
         <dd>
@@ -1633,7 +1653,7 @@ Problem: type="https://example.net/problems/almost-out",
       <h2 id="name-json-schema-for-http-proble">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-json-schema-for-http-proble" class="section-name selfRef">JSON Schema for HTTP Problems</a>
       </h2>
-<p id="appendix-A-1">This section presents a non-normative JSON Schema <span>[<a href="#I-D.draft-bhutton-json-schema-00" class="xref">I-D.draft-bhutton-json-schema-00</a>]</span> for HTTP Problem Details. If there is any disagreement between it and the text of the specification, the latter prevails.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">This section presents a non-normative JSON Schema <span>[<a href="#JSON-SCHEMA" class="xref">JSON-SCHEMA</a>]</span> for HTTP Problem Details. If there is any disagreement between it and the text of the specification, the latter prevails.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <div id="appendix-A-2">
 <pre class="lang-json sourcecode">
 # NOTE: '\' line wrapping per RFC 8792
