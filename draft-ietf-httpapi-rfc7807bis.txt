@@ -195,6 +195,13 @@ Table of Contents
    Host: account.example.com
    Accept: application/json
 
+   {
+     "age": 42.3,
+     "profile": {
+       "color": "yellow"
+     }
+   }
+
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
    Content-Language: en
